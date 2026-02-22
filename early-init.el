@@ -1,25 +1,5 @@
 ;;; early-init.el --- Early Init -*- lexical-binding: t; -*-
 
-;; Author: James Cherti <https://www.jamescherti.com/contact/>
-;; URL: https://github.com/jamescherti/minimal-emacs.d
-;; Package-Requires: ((emacs "29.1"))
-;; Keywords: maint
-;; Version: 1.3.1
-;; SPDX-License-Identifier: GPL-3.0-or-later
-
-;;; Commentary:
-;; The minimal-emacs.d project is a lightweight and optimized Emacs base
-;; (init.el and early-init.el) that gives you full control over your
-;; configuration. It provides better defaults, an optimized startup, and a clean
-;; foundation for building your own vanilla Emacs setup.
-;;
-;; Building the minimal-emacs.d init.el and early-init.el was the result of
-;; extensive research and testing to fine-tune the best parameters and
-;; optimizations for an Emacs configuration.
-;;
-;; Do not modify this file; instead, modify pre-early-init.el or
-;; post-early-init.el.
-
 ;;; Code:
 
 ;;; Internal variables
@@ -132,18 +112,6 @@ pre-early-init.el, and post-early-init.el.")
           (throw 'done t))))
     filename))
 
-(defun minimal-emacs-load-user-init (filename)
-  "Execute a file of Lisp code named FILENAME."
-  (let ((init-file (expand-file-name filename
-                                     minimal-emacs-user-directory)))
-    (if (not minimal-emacs-load-compiled-init-files)
-        (load init-file :no-error (not minimal-emacs-debug) :nosuffix)
-      ;; Remove the file suffix (.el, .el.gz, etc.) to let the `load' function
-      ;; select between .el and .elc files.
-      (setq init-file (minimal-emacs--remove-el-file-suffix init-file))
-      (load init-file :no-error (not minimal-emacs-debug)))))
-
-(minimal-emacs-load-user-init "pre-early-init.el")
 
 (setq custom-theme-directory
       (expand-file-name "themes/" minimal-emacs-user-directory))
@@ -472,7 +440,6 @@ this stage of initialization."
                                    ("melpa-stable" . 50)))
 
 ;;; Load post-early-init.el
-(minimal-emacs-load-user-init "post-early-init.el")
 
 ;; Local variables:
 ;; byte-compile-warnings: (not obsolete free-vars)

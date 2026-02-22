@@ -1,30 +1,4 @@
-;;; init.el --- Init -*- lexical-binding: t; -*-
 
-;; Author: James Cherti <https://www.jamescherti.com/contact/>
-;; URL: https://github.com/jamescherti/minimal-emacs.d
-;; Package-Requires: ((emacs "29.1"))
-;; Keywords: maint
-;; Version: 1.3.1
-;; SPDX-License-Identifier: GPL-3.0-or-later
-
-;;; Commentary:
-;; The minimal-emacs.d project is a lightweight and optimized Emacs base
-;; (init.el and early-init.el) that gives you full control over your
-;; configuration. It provides better defaults, an optimized startup, and a clean
-;; foundation for building your own vanilla Emacs setup.
-;;
-;; Building the minimal-emacs.d init.el and early-init.el was the result of
-;; extensive research and testing to fine-tune the best parameters and
-;; optimizations for an Emacs configuration.
-;;
-;; Do not modify this file; instead, modify pre-init.el or post-init.el.
-
-;;; Code:
-
-;;; Load pre-init.el
-(if (fboundp 'minimal-emacs-load-user-init)
-    (minimal-emacs-load-user-init "pre-init.el")
-  (error "The early-init.el file failed to loaded"))
 
 ;;; Before package
 
@@ -544,9 +518,6 @@
                            dired-find-alternate-file set-goal-column))
   (put cmd 'disabled nil))
 
-;;; Load post init
-(when (fboundp 'minimal-emacs-load-user-init)
-  (minimal-emacs-load-user-init "post-init.el"))
 (setq minimal-emacs--success t)
 
 ;; Local variables:
