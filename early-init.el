@@ -422,7 +422,6 @@ this stage of initialization."
                                    ("melpa-stable" . 50)))
 
 ;;; Load post-early-init.el
-(minimal-emacs-load-user-init "post-early-init.el")
 
 ;; Local variables:
 ;; byte-compile-warnings: (not obsolete free-vars)

@@ -518,6 +518,9 @@
 
 (setq dabbrev-ignored-buffer-modes
       '(archive-mode image-mode docview-mode tags-table-mode
+                     pdf-view-mode tags-table-mode))
+
+(setq dabbrev-ignored-buffer-regexps
       '(;; - Buffers starting with a space (internal or temporary buffers)
         "\\` "
         ;; Tags files such as ETAGS, GTAGS, RTAGS, TAGS, e?tags, and GPATH,
@@ -533,9 +536,6 @@
   (put cmd 'disabled nil))
 
 ;;; Load post init
-(when (fboundp 'minimal-emacs-load-user-init)
-  (minimal-emacs-load-user-init "post-init.el"))
-(setq minimal-emacs--success t)
 
 ;; Local variables:
 ;; byte-compile-warnings: (not obsolete free-vars)
