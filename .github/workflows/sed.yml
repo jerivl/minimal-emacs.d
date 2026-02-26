@@ -25,7 +25,13 @@ jobs:
           # 's|...|...|g' is the substitution syntax. We use '|' as delimiter to avoid escaping '/' in URLs/paths
           # Note: The -i flag's behavior can differ slightly between GNU sed (Linux) and BSD sed (macOS).
           # On Linux, `sed -i` works. On macOS, you might need `sed -i ''`. Ubuntu runners are Linux.
+          # 2,21d: initial comment block between lexical-binding and ';;; Code:'
+          # 135,146d: defun minimal-emacs-load-user-init + invocation
+          # 475d: minimal-emacs-load-user-init invoked
           sed -i "2,21d;135,146d;475d" early-init.el
+          # 1,22d: Initial comment block including lexical binding up to ';;; Code:'
+          # 24,27d: minimal-emacs-load-user-init invoked
+          # 547,549d: minimal-emacs-load-user-init invoked
           sed -i "1,22d;24,27d;547,549d" init.el
 
       - name: Add, commit, and push
