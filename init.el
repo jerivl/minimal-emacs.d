@@ -2,6 +2,19 @@
 
 ;;; Before package
 
+;; The initial buffer is created during startup even in non-interactive
+;; sessions, and its major mode is fully initialized. Modes like `text-mode',
+;; `org-mode', or even the default `lisp-interaction-mode' load extra packages
+;; and run hooks, which can slow down startup.
+;;
+;; Using `fundamental-mode' for the initial buffer to avoid unnecessary
+;; startup overhead.
+(setq initial-major-mode 'fundamental-mode
+      initial-scratch-message nil)
+
+;; Set-language-environment sets default-input-method, which is unwanted.
+(setq default-input-method nil)
+
 ;; Ask the user whether to terminate asynchronous compilations on exit.
 ;; This prevents native compilation from leaving temporary files in /tmp.
 (setq native-comp-async-query-on-exit t)
@@ -20,13 +33,17 @@
 
 ;;; package.el
 
-(when (bound-and-true-p minimal-emacs-package-initialize-and-refresh)
+(when (and (bound-and-true-p minimal-emacs-package-initialize-and-refresh)
+           (not (bound-and-true-p byte-compile-current-file))
+           (not (or (fboundp 'straight-use-package)
+                    (fboundp 'elpaca))))
   ;; Initialize and refresh package contents again if needed
   (package-initialize)
-  (unless (package-installed-p 'use-package)
-    (unless (seq-empty-p package-archive-contents)
-      (package-refresh-contents))
-    (package-install 'use-package))
+  (when (version< emacs-version "29.1")
+    (unless (package-installed-p 'use-package)
+      (unless package-archive-contents
+        (package-refresh-contents))
+      (package-install 'use-package)))
   (require 'use-package))
 
 ;;; Minibuffer
@@ -501,9 +518,6 @@
 
 (setq dabbrev-ignored-buffer-modes
       '(archive-mode image-mode docview-mode tags-table-mode
-                     pdf-view-mode tags-table-mode))
-
-(setq dabbrev-ignored-buffer-regexps
       '(;; - Buffers starting with a space (internal or temporary buffers)
         "\\` "
         ;; Tags files such as ETAGS, GTAGS, RTAGS, TAGS, e?tags, and GPATH,
@@ -518,6 +532,9 @@
                            dired-find-alternate-file set-goal-column))
   (put cmd 'disabled nil))
 
+;;; Load post init
+(when (fboundp 'minimal-emacs-load-user-init)
+  (minimal-emacs-load-user-init "post-init.el"))
 (setq minimal-emacs--success t)
 
 ;; Local variables:
