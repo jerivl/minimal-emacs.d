@@ -1,4 +1,3 @@
-;;; early-init.el --- Early Init -*- lexical-binding: t; -*-
 
 ;;; Code:
 
