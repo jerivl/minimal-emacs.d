@@ -1,25 +1,5 @@
 ;;; early-init.el --- Early Init -*- lexical-binding: t; -*-
 
-;; Author: James Cherti <https://www.jamescherti.com/contact/>
-;; URL: https://github.com/jamescherti/minimal-emacs.d
-;; Package-Requires: ((emacs "29.1"))
-;; Keywords: maint
-;; Version: 1.3.1
-;; SPDX-License-Identifier: GPL-3.0-or-later
-
-;;; Commentary:
-;; The minimal-emacs.d project is a lightweight and optimized Emacs base
-;; (init.el and early-init.el) that gives you full control over your
-;; configuration. It provides better defaults, an optimized startup, and a clean
-;; foundation for building your own vanilla Emacs setup.
-;;
-;; Building the minimal-emacs.d init.el and early-init.el was the result of
-;; extensive research and testing to fine-tune the best parameters and
-;; optimizations for an Emacs configuration.
-;;
-;; Do not modify this file; instead, modify pre-early-init.el or
-;; post-early-init.el.
-
 ;;; Code:
 
 ;;; Internal variables
@@ -113,7 +93,6 @@ Note that this should end with a directory separator.")
 (setq load-prefer-newer t)
 (when minimal-emacs-debug
   (setq debug-on-error minimal-emacs-debug))
-
 (defvar minimal-emacs--success nil)
 (defun minimal-emacs--check-success ()
   "Verify that the Emacs configuration has loaded successfully."
@@ -143,7 +122,6 @@ pre-early-init.el, and post-early-init.el.")
           (setq filename (substring filename 0 (- (length suffix))))
           (throw 'done t))))
     filename))
-
 (defun minimal-emacs-load-user-init (filename)
   "Execute a file of Lisp code named FILENAME."
   (let ((init-file (expand-file-name filename
@@ -454,7 +432,6 @@ this stage of initialization."
 (setq use-package-enable-imenu-support t)
 
 ;; package.el
-(setq package-enable-at-startup nil)  ; Let the init.el file handle this
 (setq package-quickstart-file
       (expand-file-name "package-quickstart.el" user-emacs-directory))
 (setq package-archives '(("melpa"        . "https://melpa.org/packages/")
