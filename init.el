@@ -1,6 +1,6 @@
 
-      (minimal-emacs-load-user-init "pre-init.el"))
-  (error "The early-init.el file failed to load"))
+;;; Load pre-init.el
+
 
 ;;; Before package
 
@@ -524,6 +524,9 @@
 
 (setq dabbrev-ignored-buffer-regexps
       '(;; - Buffers starting with a space (internal or temporary buffers)
+        "\\` "
+        ;; Tags files such as ETAGS, GTAGS, RTAGS, TAGS, e?tags, and GPATH,
+        ;; including versions with numeric extensions like <123>
         "\\(?:\\(?:[EG]?\\|GR\\)TAGS\\|e?tags\\|GPATH\\)\\(<[0-9]+>\\)?"))
 
 ;;; Remove warnings from narrow-to-region, upcase-region...
@@ -535,10 +538,6 @@
   (put cmd 'disabled nil))
 
 ;;; Load post init
-
-(when (and minimal-emacs-load-post-init
-           (fboundp 'minimal-emacs-load-user-init))
-  (minimal-emacs-load-user-init "post-init.el"))
 
 (setq minimal-emacs--success t)
 
