@@ -460,7 +460,7 @@ If the new path's directories does not exist, create them."
          ;; Minibuffer history
          :map minibuffer-local-map
          ("M-s" . consult-history)
-         ("M-r" . consult-history))
+         ("M-r" . consult-history)))
 
   ;; Enable automatic preview at point in the *Completions* buffer.
   :hook (completion-list-mode . consult-preview-at-point-mode)
@@ -768,59 +768,6 @@ If the new path's directories does not exist, create them."
 
 ;; Run M-x free-keys to display keys that are unbound
 (use-package free-keys :ensure t)
-
-;; The markdown-mode package provides a major mode for Emacs for syntax
-  ;; highlighting, editing commands, and preview support for Markdown documents.
-  ;; It supports core Markdown syntax as well as extensions like GitHub Flavored
-  ;; Markdown (GFM).
-  (use-package markdown-mode
-      :commands (gfm-mode
-                 gfm-view-mode
-                 markdown-mode
-                 markdown-view-mode)
-      :mode (("\\.markdown\\'" . markdown-mode)
-            ("\\.md\\'" . markdown-mode)
-            ("README\\.md\\'" . gfm-mode))
-      :bind (:map markdown-mode-map
-            ("C-c C-e" . markdown-do)))
-
-;; Automatically generate a table of contents when editing Markdown files
-(use-package markdown-toc
-    :ensure t
-    :commands
-    (markdown-toc-generate-toc
-    markdown-toc-generate-or-refresh-toc
-    markdown-toc-delete-toc
-    markdown-toc--toc-already-present-p)
-    :custom
-    (markdown-toc-header-toc-title "**Table of Contents**"))
-
-(use-package hledger-mode :ensure t)
-
-; Edit csv
-(use-package csv-mode :ensure t)
-
-(use-package writegood-mode :ensure t)
-
-(use-package quick-sdcv
-  :ensure t
-  :custom
-  (quick-sdcv-dictionary-prefix-symbol "►")
-  (quick-sdcv-ellipsis " ▼"))
-
-(use-package synosaurus
-  :ensure t
-  :after corfu
-  :config
-  (setq synosaurus-backend 'synosaurus-backend-wordnet)
-  (setq synosaurus-choose-method 'popup))
-
-(use-package jinx
-  :bind (("M-$" . jinx-correct)
-         ("C-M-$" . jinx-languages)))
-  :custom
-  (dolist (hook '(text-mode-hook conf-mode-hook))
-  (add-hook hook #'jinx-mode))
 
 ;; Org mode is a major mode designed for organizing notes, planning, task
 ;; management, and authoring documents using plain text with a simple and

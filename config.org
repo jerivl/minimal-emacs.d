@@ -1,10 +1,12 @@
 #+TITLE: Emacs config
 #+AUTO_TANGLE: t
 
-#+transclude: [[file:README.md][README.md]]
+This is my personal emacs repo, but also somewhat of a personal knowledge base for the emacs ecosystem as I have come to know it. This is a fork of the excellent [[https://github.com/jamescherti/minimal-emacs.d][minimal-emacs.d]] project that decouples config
+Upstream suggested configurations are used heavily. Source is linked if available. The difference between this repo and the one by jamescherti is that I made the decision to remove all dependence of .el files between each other. I prefer for them to be compiled by my dev environment resulting in a single stage init file that is loaded dynamically. For me, this is a lot more maintainable with the emacs-nixpkgs overlay and I still get most of the benefits of the minimal-emacs.d project, albeit with a probable drop in startup speed.
+The main branch is intended to be a stable branch for me to apply to new projects, stable meaning that early-init.el and init.el are generated from from upstream, see sed.yml. I try to track upstream as close as possible on the update branch, but for now I see the most elegant solution is manually editing the sed commands to filter out problematic lines.
 
-minimal-emacs.d suggested configurations are used heavily. Source is linked if available.
 * Base config
+This section corresponds to any configuration that will be applied accross all emacs instances, regardless of the answer to the copier questions
 ** Runtime-Internals
 *** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#optimization-native-compilation][Assist native compilation with compile-angel]]
 #+BEGIN_SRC emacs-lisp : post-init.el
@@ -47,15 +49,17 @@ minimal-emacs.d suggested configurations are used heavily. Source is linked if a
 
 #+END_SRC
 
-*** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-elpaca-package-manager][Elpaca package maanger]]
-#+BEGIN_SRC emacs-lisp : pre-early-init.el
+*** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-elpaca-package-manager][Elpaca package manager]]
+Currently I'm letting nix handle all of the external dependencies for emacs through devenv. I feel much more comfortable with the approach of scoping derivations per project rather than having arbitrary packages cluttering my main profile.
+#+BEGIN_SRC emacs-lisp :tangle pre-early-init.el
   ;; By default, minimal-emacs-package-initialize-and-refresh is set to t, which
   ;; makes minimal-emacs.d call the built-in package manager. Since Elpaca will
   ;; replace the package manager, there is no need to call it.
   (setq minimal-emacs-package-initialize-and-refresh nil)
 
 #+END_SRC
-#+BEGIN_SRC emacs-lisp : pre-init.el
+Previously I was using elpaca, and it was tangled into pre-init.el
+#+BEGIN_SRC emacs-lisp 
    ;; Elpaca bootstrap
 (defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
@@ -270,6 +274,12 @@ If the new path's directories does not exist, create them."
   :hook ((prog-mode . apheleia-mode)))
 #+END_SRC
 *** Completion
+**** TODO: lsp-bridge on graphical linux, corfu on terminal linux, disable on macos.
+lsp-bridge has been my preferred lsp plugin since moving full time to nixos, but I still want to rely on corfu/cape for terminal use. Last time I tried this on MacOS it was hard to decouple environment issues with config issues in getting either of these work.
+**** TODO: eglot + lsp-booster
+like the rest of emacs, is constrained to a single thread, but the lsp-booster plugin (and the corresponding eglot-booster plugin) calls external code to open up multithreading. This was difficult to set up dependencies on MacOS but it should be fine if I call the nixpkgs version with devenv.
+**** TODO: yasnippet
+I'm a little unsure what to do about yasnippet at the moment in light of directory based config. I do want these to be shared, but declaring them all here feels cumbersome, and it would be kind of nice if some of them were to mutate depending on my project.
 **** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-lsp-servers-with-eglot-built-in][eglot]]
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
 ;; Set up the Language Server Protocol (LSP) servers using Eglot.
@@ -279,7 +289,6 @@ If the new path's directories does not exist, create them."
              eglot-rename
              eglot-format-buffer))
 #+END_SRC
-
 
 **** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#tree-sitter-integration-better-syntax-highlighting][treesitter]]
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
@@ -315,7 +324,7 @@ If the new path's directories does not exist, create them."
 #+END_SRC
 
 **** corfu
-On emacs <31, popup is needed for TTY autocomplete on point. Also depended on by synosaurus
+On emacs <31, popup is needed for TTY autocomplete on point. Last I checked it seemed to be needed on macos, but I could forgo that dependency on linux. Also note that popup is also a dependency for synosaurus
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
 (use-package popup :ensure t)
 
@@ -376,7 +385,11 @@ On emacs <31, popup is needed for TTY autocomplete on point. Also depended on by
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
 #+END_SRC
 *** Generative AI
+I try not to use these, especially given that most of my time is spent on research or systems programming. I'm staunchly against using it for writing in any capacity that represents my voice and opinions to any other party. However, since this is my personal repo, and no one is really going to look here, I'll let the word calculator summarize some of the commits I make.
+I'm also ok with using LLMs for front end web development as the standard for performance on the modern web is in hell. 
 ** Buffers
+Might depreciate Dirvish. Will do it next time I think about this without having used it. 
+The only thing keeping me on it is that im still unsure if I like using yazi from within emacs. Even then, most of the features that I use are also covered by treemacs
 *** Dirvish: modern file browser
 #+BEGIN_SRC emacs-lisp : post-init.el
 ;; Dirvish: drop-in replacement for dired
@@ -871,7 +884,7 @@ On emacs <31, popup is needed for TTY autocomplete on point. Also depended on by
     :commands undo-fu-session-global-mode
     :hook (after-init . undo-fu-session-global-mode))
 #+END_SRC
-*** TODO Split this, it isn't elisp specific: [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#enhancing-the-elisp-development-experience][Enhancing the Elisp development experience]]
+*** TODO Split this, most of it elisp specific: [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#enhancing-the-elisp-development-experience][Enhancing the Elisp development experience]]
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
 ;; Enables automatic indentation of code while typing
 (use-package aggressive-indent
@@ -976,7 +989,8 @@ Vundo uses the standard undo/redo commands whereas undo-tree doesn't
 
 * Major modes
 ** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-markdown-mode-eg-readmemd-syntax][Markdown]]
-#+BEGIN_SRC emacs-lisp :tangle post-init.el
+*** TODO Move markdown mode to core config, leaving markdown toc to be conditional
+#+BEGIN_SRC emacs-lisp :tangle markdown.el
     ;; The markdown-mode package provides a major mode for Emacs for syntax
     ;; highlighting, editing commands, and preview support for Markdown documents.
     ;; It supports core Markdown syntax as well as extensions like GitHub Flavored
@@ -1005,11 +1019,11 @@ Vundo uses the standard undo/redo commands whereas undo-tree doesn't
 #+END_SRC
 
 ** Hledger
-#+BEGIN_SRC emacs-lisp :tangle post-init.el
+#+BEGIN_SRC emacs-lisp :tangle hledger.el
 (use-package hledger-mode :ensure t)
 #+END_SRC
 ** CSV
-#+BEGIN_SRC emacs-lisp :tangle post-init.el
+#+BEGIN_SRC emacs-lisp :tangle csv.el
   ; Edit csv
   (use-package csv-mode :ensure t)
 #+END_SRC
@@ -1017,11 +1031,11 @@ Vundo uses the standard undo/redo commands whereas undo-tree doesn't
 ** Text
 *** Write-good-mode
 Modern implementation of [[https://matt.might.net/articles/shell-scripts-for-passive-voice-weasel-words-duplicates/][weasle word finder]]
-#+BEGIN_SRC emacs-lisp :tangle post-init.el
+#+BEGIN_SRC emacs-lisp :tangle writing.el
 (use-package writegood-mode :ensure t)
 #+END_SRC
 *** Dictionary
-#+BEGIN_SRC emacs-lisp :tangle post-init.el
+#+BEGIN_SRC emacs-lisp :tangle writing.el
 (use-package quick-sdcv
   :ensure t
   :custom
@@ -1029,7 +1043,7 @@ Modern implementation of [[https://matt.might.net/articles/shell-scripts-for-pas
   (quick-sdcv-ellipsis " ▼"))
 #+END_SRC
 *** Thesaurus
-#+BEGIN_SRC emacs-lisp :tangle post-init.el
+#+BEGIN_SRC emacs-lisp :tangle writing.el
 (use-package synosaurus
   :ensure t
   :after corfu
@@ -1041,15 +1055,16 @@ Modern implementation of [[https://matt.might.net/articles/shell-scripts-for-pas
 Spellcheck provided by jinx for textmodes. Emacs must be compiled for use with dynamic modules.
 This might be overkill for programming modes as it reads the entire buffer for errors.
 TODO make jinx ignore org-babel source blocks
-#+BEGIN_SRC emacs-lisp :tangle post-init.el
+#+BEGIN_SRC emacs-lisp :tangle writing.el
 (use-package jinx
   :bind (("M-$" . jinx-correct)
-         ("C-M-$" . jinx-languages)))
+         ("C-M-$" . jinx-languages))
   :custom
   (dolist (hook '(text-mode-hook conf-mode-hook))
-  (add-hook hook #'jinx-mode))
+  (add-hook hook #'jinx-mode)))
 #+END_SRC
 ** Org
+*** Most of this should be moved to core config, leaving behind any mode specific ob or ox modules
 *** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-org-mode][Base]]
 Config suggested by minimal-emacs
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
@@ -1084,7 +1099,7 @@ Config suggested by minimal-emacs
       (add-hook 'org-mode-hook 'org-appear-mode))
 
 #+END_SRC
-Trying org-modern again. The last time I tried it wasn't consistent about indentation
+Trying org-modern again. The last time I tried it wasn't consistent about indentation. Update: Its a lot better on linux than darwin
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
 (use-package org-modern
   :ensure t
@@ -1100,6 +1115,7 @@ Trying org-modern again. The last time I tried it wasn't consistent about indent
 #+END_SRC
 *** Babel
 **** Auto-tangle / sync
+***** TODO Test solo. Still haven't figured out if it's working
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
 ;; Automatically tangle org-babel source blocks on save
 (use-package org-auto-tangle
@@ -1123,6 +1139,7 @@ Trying org-modern again. The last time I tried it wasn't consistent about indent
 *** Export
 
 * [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#changing-the-default-theme][Theme]]
+** TODO create noweb blocks per theme
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
 (use-package lambda-themes :ensure (:host github :repo "lambda-emacs/lambda-themes")
   :custom
