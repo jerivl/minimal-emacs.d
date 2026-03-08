@@ -462,7 +462,7 @@ If the new path's directories does not exist, create them."
          ;; Minibuffer history
          :map minibuffer-local-map
          ("M-s" . consult-history)
-         ("M-r" . consult-history)))
+         ("M-r" . consult-history))
 
   ;; Enable automatic preview at point in the *Completions* buffer.
   :hook (completion-list-mode . consult-preview-at-point-mode)

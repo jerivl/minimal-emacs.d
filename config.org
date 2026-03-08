@@ -650,7 +650,7 @@ The only thing keeping me on it is that im still unsure if I like using yazi fro
          ;; Minibuffer history
          :map minibuffer-local-map
          ("M-s" . consult-history)
-         ("M-r" . consult-history)))
+         ("M-r" . consult-history))
 
   ;; Enable automatic preview at point in the *Completions* buffer.
   :hook (completion-list-mode . consult-preview-at-point-mode)
