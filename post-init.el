@@ -817,10 +817,10 @@ If the new path's directories does not exist, create them."
 
 (use-package jinx
   :bind (("M-$" . jinx-correct)
-         ("C-M-$" . jinx-languages)))
+         ("C-M-$" . jinx-languages))
   :custom
   (dolist (hook '(text-mode-hook conf-mode-hook))
-  (add-hook hook #'jinx-mode))
+  (add-hook hook #'jinx-mode)))
 
 ;; Org mode is a major mode designed for organizing notes, planning, task
 ;; management, and authoring documents using plain text with a simple and
