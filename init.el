@@ -1,4 +1,6 @@
 
+      (minimal-emacs-load-user-init "pre-init.el"))
+  (error "The early-init.el file failed to load"))
 
 ;;; Before package
 
@@ -534,8 +536,11 @@
                            list-threads erase-buffer scroll-left
                            dired-find-alternate-file set-goal-column))
   (put cmd 'disabled nil))
+(when (and minimal-emacs-load-post-init
+           (fboundp 'minimal-emacs-load-user-init))
+  (minimal-emacs-load-user-init "post-init.el"))
 
-;;; Load post init
+(setq minimal-emacs--success t)
 
 ;; Local variables:
 ;; byte-compile-warnings: (not obsolete free-vars)
