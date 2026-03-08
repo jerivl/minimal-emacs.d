@@ -26,16 +26,17 @@ jobs:
           # Note: The -i flag's behavior can differ slightly between GNU sed (Linux) and BSD sed (macOS).
           # On Linux, `sed -i` works. On macOS, you might need `sed -i ''`. Ubuntu runners are Linux.
           # 2,21d: initial comment block after lexical-binding to ';;; Code:'
-          # 116d: disable check for home directory emacs configs
-          # 146d: minimal-emacs-load-user-init invoked
-          # 457d: minimal-emacs-load-user-init invoked
-          sed -i "2,21d;116d;146d;457d" early-init.el
+          # 98,109d: disable vars that check for other user files
+          # 128d: disable check for home directory emacs configs
+          # 158,159d: minimal-emacs-load-user-init invoked
+          # 471,472d: minimal-emacs-load-user-init invoked
+          sed -i "2,21d;98,109d;128d;158,159d;471,472d" early-init.el
           
           # 1,22d: Initial comment block including lexical binding up to ';;; Code:'
-          # 24,27d: minimal-emacs-load-user-init invoked
-          # 553,555d: minimal-emacs-load-user-init invoked
-          sed -i "1,22d;24,27d;553,555d" init.el
-
+          # 26,29d: minimal-emacs-load-user-init invoked
+          # 568,571d: minimal-emacs-load-user-init invoked
+          sed -i "1,22d;26,29d;568,571d" init.el
+          
       - name: Add, commit, and push
         # You may pin to the exact commit or the version.
         # uses: actions4git/add-commit-push@2119cc12fc9e451198b0d1c27fbae6fd1b134135
