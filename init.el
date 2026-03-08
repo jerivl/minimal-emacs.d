@@ -1,4 +1,5 @@
 
+;;; Load pre-init.el
 
 
 ;;; Before package
@@ -536,6 +537,7 @@
                            dired-find-alternate-file set-goal-column))
   (put cmd 'disabled nil))
 
+;;; Load post init
 
 (setq minimal-emacs--success t)
 

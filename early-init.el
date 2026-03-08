@@ -75,18 +75,6 @@ of the progress or any relevant activities during startup.")
   "Directory beneath minimal-emacs.d files are placed.
 Note that this should end with a directory separator.")
 
-(defvar minimal-emacs-load-pre-early-init t
-  "If non-nil, attempt to load `pre-early-init.el`.")
-
-(defvar minimal-emacs-load-post-early-init t
-  "If non-nil, attempt to load `post-early-init.el`.")
-
-(defvar minimal-emacs-load-pre-init t
-  "If non-nil, attempt to load `pre-init.el`.")
-
-(defvar minimal-emacs-load-post-init t
-  "If non-nil, attempt to load `post-init.el`.")
-
 ;;; Load pre-early-init.el
 
 ;; Prefer loading newer compiled files
@@ -111,6 +99,18 @@ Note that this should end with a directory separator.")
 This will enable minimal-emacs to load byte-compiled or possibly native-compiled
 init files for the following initialization files: pre-init.el, post-init.el,
 pre-early-init.el, and post-early-init.el.")
+
+(defun minimal-emacs--remove-el-file-suffix (filename)
+  "Remove the Elisp file suffix from FILENAME and return it (.el, .el.gz...)."
+  (let ((suffixes (mapcar (lambda (ext) (concat ".el" ext))
+                          load-file-rep-suffixes)))
+    (catch 'done
+      (dolist (suffix suffixes filename)
+        (when (string-suffix-p suffix filename)
+          (setq filename (substring filename 0 (- (length suffix))))
+          (throw 'done t))))
+    filename))
+
 (defun minimal-emacs-load-user-init (filename)
   "Execute a file of Lisp code named FILENAME."
   (let ((init-file (expand-file-name filename
@@ -121,7 +121,6 @@ pre-early-init.el, and post-early-init.el.")
       ;; select between .el and .elc files.
       (setq init-file (minimal-emacs--remove-el-file-suffix init-file))
       (load init-file :no-error (not minimal-emacs-debug)))))
-
 
 
 (setq custom-theme-directory
@@ -420,6 +419,7 @@ this stage of initialization."
 (setq use-package-enable-imenu-support t)
 
 ;; package.el
+(setq package-enable-at-startup nil)  ; Let the init.el file handle this
 (setq package-quickstart-file
       (expand-file-name "package-quickstart.el" user-emacs-directory))
 (setq package-archives '(("melpa"        . "https://melpa.org/packages/")
@@ -432,7 +432,6 @@ this stage of initialization."
                                    ("melpa-stable" . 50)))
 
 ;;; Load post-early-init.el
-
 
 
 ;; Local variables:
