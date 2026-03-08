@@ -2,7 +2,9 @@
 #+AUTO_TANGLE: t
 
 This is my personal emacs repo, but also somewhat of a personal knowledge base for the emacs ecosystem as I have come to know it. This is a fork of the excellent [[https://github.com/jamescherti/minimal-emacs.d][minimal-emacs.d]] project that decouples config
+
 Upstream suggested configurations are used heavily. Source is linked if available. The difference between this repo and the one by jamescherti is that I made the decision to remove all dependence of .el files between each other. I prefer for them to be compiled by my dev environment resulting in a single stage init file that is loaded dynamically. For me, this is a lot more maintainable with the emacs-nixpkgs overlay and I still get most of the benefits of the minimal-emacs.d project, albeit with a probable drop in startup speed.
+
 The main branch is intended to be a stable branch for me to apply to new projects, stable meaning that early-init.el and init.el are generated from from upstream, see sed.yml. I try to track upstream as close as possible on the update branch, but for now I see the most elegant solution is manually editing the sed commands to filter out problematic lines.
 
 * Base config
@@ -110,7 +112,7 @@ Previously I was using elpaca, and it was tangled into pre-init.el
 
 #+END_SRC
 
-** Disk management
+** System level
 *** Cache file locations
 #+BEGIN_SRC emacs-lisp : pre-early-init.el
 ;;; Reducing clutter in ~/.emacs.d by redirecting files to ~/.emacs.d/var/
@@ -231,6 +233,10 @@ If the new path's directories does not exist, create them."
 ;  :config
 ;  (turn-on-pbcopy))
 
+#+END_SRC
+*** Shell / Terminal Emulators
+#+BEGIN_SRC emacs-lisp :tangle post-init.el
+  (use-package eat :ensure t)
 #+END_SRC
 ** Code correction/augmentation
 *** Linting

@@ -101,6 +101,8 @@ If the new path's directories does not exist, create them."
 ;  :config
 ;  (turn-on-pbcopy))
 
+(use-package eat :ensure t)
+
 ;; The stripspace Emacs package provides stripspace-local-mode, a minor mode
 ;; that automatically removes trailing whitespace and blank lines at the end of
 ;; the buffer when saving.
