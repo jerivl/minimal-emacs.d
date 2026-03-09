@@ -53,7 +53,7 @@ This section corresponds to any configuration that will be applied accross all e
 
 *** Direnv mode
 Since I'm manageing most of my developer packages through devenv, I may as well install the direnv extension
-#+BEGIN_SRC emacs-lisp :tangle pre-init.el
+#+BEGIN_SRC emacs-lisp :tangle post-init.el
   (use-package direnv :ensure t :config (direnv-mode))
 #+END_SRC
 
