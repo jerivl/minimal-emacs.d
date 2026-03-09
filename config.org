@@ -1129,6 +1129,7 @@ Trying org-modern again. The last time I tried it wasn't consistent about indent
 ** TODO create noweb blocks per theme
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
 (use-package doric-themes :ensure t)
+(load-theme 'modus-vivendi-deuteranopia t)
 #+END_SRC
 ** Other themes that I like
 #+BEGIN_SRC emacs-lisp
