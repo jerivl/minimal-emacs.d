@@ -808,7 +808,4 @@ If the new path's directories does not exist, create them."
   (( "C-c M-i" . org-tanglesync-process-buffer-interactive)
    ( "C-c M-a" . org-tanglesync-process-buffer-automatic)))
 
-(use-package doric-themes
-  :ensure t
-  :config
-  (doric-themes-select 'doric-wind))
+(use-package doric-themes :ensure t)
