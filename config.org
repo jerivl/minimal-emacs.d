@@ -294,14 +294,13 @@ like the rest of emacs, is constrained to a single thread, but the lsp-booster p
 **** TODO: yasnippet
 I'm a little unsure what to do about yasnippet at the moment in light of directory based config. I do want these to be shared, but declaring them all here feels cumbersome, and it would be kind of nice if some of them were to mutate depending on my project.
 **** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-lsp-servers-with-eglot-built-in][eglot]]
-;#+BEGIN_SRC emacs-lisp :tangle post-init.el
+#+BEGIN_SRC emacs-lisp :tangle post-init.el
 ;; Set up the Language Server Protocol (LSP) servers using Eglot.
-;(use-package eglot
-;  :ensure nil
-;  :commands (eglot-ensure
-;             eglot-rename
-;             eglot-format-buffer))
-;#+END_SRC
+(use-package eglot
+  :ensure nil
+  :commands (eglot-ensure
+             eglot-rename
+             eglot-format-buffer))
 
 **** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#tree-sitter-integration-better-syntax-highlighting][treesitter]]
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
@@ -338,7 +337,7 @@ I'm a little unsure what to do about yasnippet at the moment in light of directo
 
 **** corfu
 On emacs <31, popup is needed for TTY autocomplete on point. Last I checked it seemed to be needed on macos, but I could forgo that dependency on linux. Also note that popup is also a dependency for synosaurus
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp :tangle post-init.el
 (use-package popup :ensure t)
 
 (use-package corfu-terminal
@@ -400,9 +399,9 @@ On emacs <31, popup is needed for TTY autocomplete on point. Last I checked it s
 
 **** lsp-bridge
 This becomes a trivial install with nix handling dependencies, especially since lsp-bridge-mode is on nixpkgs
-#+BEGIN_SRC emacs-lisp :tangle post-init.el
+#+BEGIN_SRC emacs-lisp
 (use-package lsp-bridge :config (global-lsp-bridge-mode))
-#+END_SRC 
+#+END_SRC
 
 *** Generative AI
 I try not to use these, especially given that most of my time is spent on research or systems programming. I'm staunchly against using it for writing in any capacity that represents my voice and opinions to any other party. However, since this is my personal repo, and no one is really going to look here, I'll let the word calculator summarize some of the commits I make.
