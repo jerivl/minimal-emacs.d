@@ -1215,11 +1215,7 @@ The rest are one off themes that I found while browsing.
 #+NAME: themes:rebecca
 #+CAPTION: She was really blue and cyberpunky!
 #+BEGIN_SRC emacs-lisp
-
-(use-package rebecca-theme
-  :ensure t
-  :config
-  ;(load-theme 'rebecca t))
+(use-package rebecca-theme :ensure t :config (load-theme 'rebecca t))
 #+END_SRC
 
 #+NAME: themes:django
