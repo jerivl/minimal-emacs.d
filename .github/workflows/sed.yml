@@ -31,7 +31,7 @@ jobs:
           # 128d: disable check for home directory emacs configs
           # 158,159d: minimal-emacs-load-user-init invoked
           # 471,472d: minimal-emacs-load-user-init invoked
-          sed -i "2,21d;98,109d;128d;158,159d;471,472d" early-init.el
+          sed -i "1,21d;98,109d;128d;158,159d;471,472d" early-init.el
           
           # 1,22d: Initial comment block including lexical binding up to ';;; Code:'
           # 26,29d: minimal-emacs-load-user-init invoked
