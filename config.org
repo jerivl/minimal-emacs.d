@@ -1128,10 +1128,7 @@ Trying org-modern again. The last time I tried it wasn't consistent about indent
 * [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#changing-the-default-theme][Theme]]
 ** TODO create noweb blocks per theme
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
-(use-package doric-themes
-  :ensure t
-  :config
-  (doric-themes-select 'doric-wind))
+(use-package doric-themes :ensure t)
 #+END_SRC
 ** Other themes that I like
 #+BEGIN_SRC emacs-lisp
