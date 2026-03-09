@@ -18,10 +18,10 @@ name: CI
 on:
   push:
     paths:
-      - '*.el'
+      - '**.el'
   pull_request:
     paths:
-      - '*.el'
+      - '**.el'
 jobs:
   test:
     runs-on: ubuntu-latest
