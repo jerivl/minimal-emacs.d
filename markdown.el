@@ -1,4 +1,4 @@
-  ;; The markdown-mode package provides a major mode for Emacs for syntax
+;; The markdown-mode package provides a major mode for Emacs for syntax
   ;; highlighting, editing commands, and preview support for Markdown documents.
   ;; It supports core Markdown syntax as well as extensions like GitHub Flavored
   ;; Markdown (GFM).

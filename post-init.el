@@ -1,6 +1,6 @@
 ;; The files in this repo are intended to be called at build time by direnv.
 ;; Note that all .el files have had their lexical-binding stripped
-(use-package envrc :ensure t :hook ((after-init . envrc-global-mode))
+(use-package envrc :ensure t :hook (after-init . envrc-global-mode))
 
 ;; Auto-revert in Emacs is a feature that automatically updates the
 ;; contents of a buffer to reflect changes made to the underlying file
