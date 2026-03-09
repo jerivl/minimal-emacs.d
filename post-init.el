@@ -795,3 +795,5 @@ If the new path's directories does not exist, create them."
   :config
   (setq catppuccin-flavor 'frappe) ;; or 'latte, 'macchiato, or 'mocha
   (load-theme 'catppuccin :no-confirm))
+
+(use-package doom-modeline :ensure t :init (doom-modeline-mode 1))
