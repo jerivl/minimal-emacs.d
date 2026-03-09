@@ -124,7 +124,8 @@ Previously I was using elpaca, and it was tangled into pre-init.el
 #+BEGIN_SRC emacs-lisp : pre-early-init.el
 ;;; Reducing clutter in ~/.emacs.d by redirecting files to ~/.emacs.d/var/
 ;; NOTE: This must be placed in 'pre-early-init.el'.
-;(setq user-emacs-directory (expand-file-name "var/" minimal-emacs-user-directory))
+(setq backup-by-copying-when-linked t)
+(setq user-emacs-directory (expand-file-name "var/" minimal-emacs-user-directory))
 ;(setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
 #+END_SRC
 *** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#optimization-native-compilation][Autorevert, recent files, minibuffer history ]]
@@ -169,23 +170,6 @@ Previously I was using elpaca, and it was tangled into pre-init.el
   ;; is saved by `recentf-save-list', which is automatically added to
   ;; `kill-emacs-hook' by `recentf-mode'.
   (add-hook 'kill-emacs-hook #'recentf-cleanup -90))
-
-;; savehist is an Emacs feature that preserves the minibuffer history between
-;; sessions. It saves the history of inputs in the minibuffer, such as commands,
-;; search strings, and other prompts, to a file. This allows users to retain
-;; their minibuffer history across Emacs restarts.
-(use-package savehist
-  :ensure nil
-  :commands (savehist-mode savehist-save)
-  :hook
-  (after-init . savehist-mode)
-  :custom
-  (savehist-autosave-interval 600)
-  (savehist-additional-variables
-   '(kill-ring                        ; clipboard
-     register-alist                   ; macros
-     mark-ring global-mark-ring       ; marks
-     search-ring regexp-search-ring)))
 
 ;; save-place-mode enables Emacs to remember the last location within a file
 ;; upon reopenng. This feature is particularly beneficial for resuming work at
@@ -287,8 +271,6 @@ If the new path's directories does not exist, create them."
   :hook ((prog-mode . apheleia-mode)))
 #+END_SRC
 *** Completion
-**** TODO: lsp-bridge on graphical linux, corfu on terminal linux, disable on macos.
-lsp-bridge has been my preferred lsp plugin since moving full time to nixos, but I still want to rely on corfu/cape for terminal use. Last time I tried this on MacOS it was hard to decouple environment issues with config issues in getting either of these work.
 **** TODO: eglot + lsp-booster
 like the rest of emacs, is constrained to a single thread, but the lsp-booster plugin (and the corresponding eglot-booster plugin) calls external code to open up multithreading. This was difficult to set up dependencies on MacOS but it should be fine if I call the nixpkgs version with devenv.
 **** TODO: yasnippet
@@ -556,8 +538,26 @@ The only thing keeping me on it is that im still unsure if I like using yazi fro
 
 #+END_SRC
 *** Minibuffer
-**** TODO Move minibuffer history here
-**** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-vertico-consult-and-embark][Vertico, Consult, Embark]]
+**** Minibuffer history
+#+BEGIN_SRC emacs-lisp :tangle post-init.el
+;; savehist is an Emacs feature that preserves the minibuffer history between
+;; sessions. It saves the history of inputs in the minibuffer, such as commands,
+;; search strings, and other prompts, to a file. This allows users to retain
+;; their minibuffer history across Emacs restarts.
+(use-package savehist
+  :ensure nil
+  :commands (savehist-mode savehist-save)
+  :hook
+  (after-init . savehist-mode)
+  :custom
+  (savehist-autosave-interval 600)
+  (savehist-additional-variables
+   '(kill-ring                        ; clipboard
+     register-alist                   ; macros
+     mark-ring global-mark-ring       ; marks
+     search-ring regexp-search-ring)))
+#+END_SRC
+**** [[Https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-vertico-consult-and-embark][Vertico, Consult, Embark]]
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
 ;; Vertico provides a vertical completion interface, making it easier to
 ;; navigate and select from completion candidates (e.g., when `M-x` is pressed).
@@ -1139,7 +1139,6 @@ Trying org-modern again. The last time I tried it wasn't consistent about indent
 #+END_SRC
 *** Babel-ob
 **** Auto-tangle / sync
-***** TODO Test solo. Still haven't figured out if it's working
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
 ;; Automatically tangle org-babel source blocks on save
 (use-package org-auto-tangle
@@ -1178,6 +1177,7 @@ Trying org-modern again. The last time I tried it wasn't consistent about indent
 #+BEGIN_SRC emacs-lisp
 (use-package doric-themes :ensure t :config  (doric-themes-select 'doric-jade))
 #+END_SRC
+The colors were weird in code blocks and the modeline on the light themes for me.
 
 #+NAME: themes:catppuccin
 #+CAPTION: The myth. The legend. Four flavors that are all cute and soft <3

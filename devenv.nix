@@ -85,43 +85,15 @@ let
   emacs-pre-early-init = '' 
     (setq user-emacs-directory "${config.git.root}")
   '';
-  emacs-early-init = builtins.readFile( builtins.fetchurl {
-    url = https://raw.githubusercontent.com/jerivl/minimal-emacs.d/refs/heads/main/early-init.el;
-  });
+  emacs-early-init = builtins.readFile "${config.git.root}/early-init.el";
   emacs-post-early-init = "";
   emacs-pre-init = "";
-  emacs-init = builtins.readFile( builtins.fetchurl {
-    url = https://raw.githubusercontent.com/jerivl/minimal-emacs.d/refs/heads/main/init.el;
-  });
-  emacs-post-init = builtins.readFile( builtins.fetchurl {
-    url = https://raw.githubusercontent.com/jerivl/minimal-emacs.d/refs/heads/update/post-init.el;
-  }) + ''
+  emacs-init = builtins.readFile "${config.git.root}/init.el";
+  emacs-post-init = (builtins.readFile "${config.git.root}/post-init.el") + ''
     (use-package magit :ensure t)
     (use-package magit-section :ensure t)
     (use-package with-editor :ensure t)
     (require 'majutsu)
-    
-    ; venv management
-    (use-package uv-mode :ensure t :hook (python-mode . uv-mode-auto-activate-hook))
-    (use-package lsp-pyright
-    :ensure t
-    :custom (setq lsp-pyright-langserver-command "basedpyright") ;; or basedpyright
-    :hook (python-mode . (lambda ()
-                            (require 'lsp-pyright)
-                            (lsp-deferred))))  ; or lsp-deferred
-    (setq backup-by-copying-when-linked t) ; https://emacs.stackexchange.com/questions/4237/how-to-prevent-emacs-from-breaking-hard-links
-    (use-package markdown-mode :ensure t)
-    (load-theme 'leuven-dark)
-    (use-package envrc :ensure t
-      :hook ((after-init . envrc-global-mode)
-             (python-ts-mode . python-mode))
-      :config (setq envrc-debug t))
-    (use-package py-vterm-interaction
-      :hook (python-mode . py-vterm-interaction-mode)
-      :config
-      ;;; Suggested:
-      (setq-default py-vterm-interaction-repl-program "ipython")
-      (setq-default py-vterm-interaction-silent-cells t))
   '';
   emacs-config = lib.strings.concatLines [
     emacs-pre-early-init
@@ -140,6 +112,7 @@ let
       jinx
       eat
       vterm
+      # unsure if I should move lsp bridge here
     ])
     ++ [
       emacs-majutsu
