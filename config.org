@@ -339,13 +339,7 @@ I'm a little unsure what to do about yasnippet at the moment in light of directo
 **** corfu
 On emacs <31, popup is needed for TTY autocomplete on point. Last I checked it seemed to be needed on macos, but I could forgo that dependency on linux. Also note that popup is also a dependency for synosaurus
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
-(use-package popup :ensure t)
-
-(use-package corfu-terminal
-  :ensure (:host "https://codeberg.org/akib/emacs-corfu-terminal.git")
-  :config
-  (unless (display-graphic-p)
-  (corfu-terminal-mode +1)))
+;(use-package popup :ensure t)
 
 (use-package kind-icon
   :ensure t
@@ -361,41 +355,53 @@ On emacs <31, popup is needed for TTY autocomplete on point. Last I checked it s
 ;; Corfu enhances in-buffer completion by displaying a compact popup with
 ;; current candidates, positioned either below or above the point. Candidates
 ;; can be selected by navigating up or down.
-(use-package corfu
-  :ensure t
-  :commands
-  (corfu-mode global-corfu-mode)
- :hook ((prog-mode . corfu-mode)
-         (shell-mode . corfu-mode)
-         (eshell-mode . corfu-mode))
- :custom
-  ;; Hide commands in M-x which do not apply to the current mode.
-  (read-extended-command-predicate #'command-completion-default-include-p)
-  ;; Disable Ispell completion function. As an alternative try `cape-dict'.
-  (text-mode-ispell-word-completion nil)
-  (tab-always-indent 'complete)
+    (use-package corfu
+      :ensure t
+      :custom
+      (corfu-cycle t)
+      (corfu-auto t)
+      (corfu-auto-prefix 2)
+      (corfu-auto-delay 0.0)
+      (corfu-quit-at-boundary 'separator)
+      (corfu-echo-documentation 0.25)
+      (corfu-preview-current 'insert)
+      (corfu-preselect-first nil)
+      :bind (:map corfu-map
+                  ("RET" . nil)
+                  ("M-SPC" . corfu-insert-separator)
+                  ("TAB" . corfu-next)
+                  ([tab] . corfu-next)
+                  ("S-TAB" . corfu-prev)
+                  ([backtab] . corfu-prev)
+                  ("S-<return> . corfu-insert"))
+      :init
+      (global-corfu-mode)
+      (corfu-history-mode)
+      :config
+      (add-hook 'eshell-mode-hook
+                (lambda () (setq-local corfu-quit-at-boundary t
+                                       corfu-quit-no-match t
+                                       corfu-auto nil)
+                                       (corfu-mode))))
 
-  ;; Enable Corfu
-  :init
-  (global-corfu-mode)
-  ;; Enable optional extension modes:
-  (corfu-history-mode)
-  (corfu-indexed-mode)
-  (corfu-popupinfo-mode))
+    (use-package corfu-terminal :ensure t
+      :init
+      (unless (display-graphic-p)
+      (corfu-terminal-mode +1)))
 
-;; Cape, or Completion At Point Extensions, extends the capabilities of
-;; in-buffer completion. It integrates with Corfu or the default completion UI,
-;; by providing additional backends through completion-at-point-functions.
-(use-package cape
-  :ensure t
-  :commands (cape-dabbrev cape-file cape-elisp-block)
-  :bind ("C-c p" . cape-prefix-map)
-  :init
-  ;; Add to the global default value of `completion-at-point-functions' which is
-  ;; used by `completion-at-point'.
-  (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  (add-hook 'completion-at-point-functions #'cape-file)
-  (add-hook 'completion-at-point-functions #'cape-elisp-block))
+    ;; Cape, or Completion At Point Extensions, extends the capabilities of
+    ;; in-buffer completion. It integrates with Corfu or the default completion UI,
+    ;; by providing additional backends through completion-at-point-functions.
+    (use-package cape
+    :ensure t
+    :commands (cape-dabbrev cape-file cape-elisp-block)
+    :bind ("C-c p" . cape-prefix-map)
+    :init
+    ;; Add to the global default value of `completion-at-point-functions' which is
+    ;; used by `completion-at-point'.
+    (add-hook 'completion-at-point-functions #'cape-dabbrev)
+    (add-hook 'completion-at-point-functions #'cape-file)
+    (add-hook 'completion-at-point-functions #'cape-elisp-block))
 #+END_SRC
 
 **** lsp-bridge
@@ -1037,16 +1043,14 @@ I mostly use jj anyway lol.
 #+BEGIN_SRC emacs-lisp
   (setq lsp-bridge-python-lsp-server "ty")
   (setq lsp-bridge-python-multi-lsp-server "ty_ruff"))
-
-
 ** Hledger
 #+BEGIN_SRC emacs-lisp :tangle hledger.el
 (use-package hledger-mode :ensure t)
 #+END_SRC
 ** CSV
 #+BEGIN_SRC emacs-lisp :tangle csv.el
-  ; Edit csv
-  (use-package csv-mode :ensure t)
+; Edit csv
+(use-package csv-mode :ensure t)
 #+END_SRC
 
 ** Text
