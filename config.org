@@ -294,14 +294,14 @@ like the rest of emacs, is constrained to a single thread, but the lsp-booster p
 **** TODO: yasnippet
 I'm a little unsure what to do about yasnippet at the moment in light of directory based config. I do want these to be shared, but declaring them all here feels cumbersome, and it would be kind of nice if some of them were to mutate depending on my project.
 **** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-lsp-servers-with-eglot-built-in][eglot]]
-#+BEGIN_SRC emacs-lisp :tangle post-init.el
+;#+BEGIN_SRC emacs-lisp :tangle post-init.el
 ;; Set up the Language Server Protocol (LSP) servers using Eglot.
-(use-package eglot
-  :ensure nil
-  :commands (eglot-ensure
-             eglot-rename
-             eglot-format-buffer))
-#+END_SRC
+;(use-package eglot
+;  :ensure nil
+;  :commands (eglot-ensure
+;             eglot-rename
+;             eglot-format-buffer))
+;#+END_SRC
 
 **** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#tree-sitter-integration-better-syntax-highlighting][treesitter]]
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
@@ -338,7 +338,7 @@ I'm a little unsure what to do about yasnippet at the moment in light of directo
 
 **** corfu
 On emacs <31, popup is needed for TTY autocomplete on point. Last I checked it seemed to be needed on macos, but I could forgo that dependency on linux. Also note that popup is also a dependency for synosaurus
-#+BEGIN_SRC emacs-lisp :tangle post-init.el
+#+BEGIN_SRC emacs-lisp :tangle 
 (use-package popup :ensure t)
 
 (use-package corfu-terminal
@@ -397,6 +397,13 @@ On emacs <31, popup is needed for TTY autocomplete on point. Last I checked it s
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
 #+END_SRC
+
+**** lsp-bridge
+This becomes a trivial install with nix handling dependencies, especially since lsp-bridge-mode is on nixpkgs
+#+BEGIN_SRC emacs-lisp :tangle post-init.el
+(use-package lsp-bridge :config (global-lsp-bridge-mode))
+#+END_SRC 
+
 *** Generative AI
 I try not to use these, especially given that most of my time is spent on research or systems programming. I'm staunchly against using it for writing in any capacity that represents my voice and opinions to any other party. However, since this is my personal repo, and no one is really going to look here, I'll let the word calculator summarize some of the commits I make.
 I'm also ok with using LLMs for front end web development as the standard for performance on the modern web is in hell.
@@ -1012,6 +1019,14 @@ I mostly use jj anyway lol.
       (markdown-toc-header-toc-title "**Table of Contents**"))
 #+END_SRC
 
+** Python
+#+BEGIN_SRC emacs-lisp :tangle python.el
+(use-package py-vterm-interaction :ensure t :hook (python-mode . py-vterm-interaction-mode))
+(use-package pydoc :ensure t)
+(use-package ein :ensure t)
+(use-package python-pytest :ensure t)
+#+END_SRC
+
 ** Hledger
 #+BEGIN_SRC emacs-lisp :tangle hledger.el
 (use-package hledger-mode :ensure t)
@@ -1040,7 +1055,6 @@ Modern implementation of [[https://matt.might.net/articles/shell-scripts-for-pas
 #+BEGIN_SRC emacs-lisp :tangle writing.el
 (use-package synosaurus
   :ensure t
-  :after corfu
   :config
   (setq synosaurus-backend 'synosaurus-backend-wordnet)
   (setq synosaurus-choose-method 'popup))
@@ -1167,16 +1181,16 @@ Light to dark: 🌻 Latte 🪴 Frappé 🌺 Macchiato 🌿 Mocha
   (kaolin-treemacs-theme)
   (load-theme 'kaolin-dark t))
 #+END_SRC
-kaolin-dark - a dark jade variant inspired by Sierra.vim
-kaolin-light - light variant of the original kaolin-dark.
-kaolin-aurora - Kaolin meets polar lights.
-kaolin-bubblegum - Kaolin colorful theme with dark blue background.
-kaolin-eclipse - a dark purple variant
-kaolin-galaxy - bright theme based on one of the Sebastian Andaur arts.
-kaolin-ocean - a dark blue variant.
-kaolin-temple - dark background with syntax highlighting focus on blue, green and pink shades
-kaolin-valley-dark - colorful Kaolin theme with brown background.
-kaolin-valley-light - light variant of kaolin-valley theme.
+- kaolin-dark - a dark jade variant inspired by Sierra.vim
+- kaolin-light - light variant of the original kaolin-dark.
+- kaolin-aurora - Kaolin meets polar lights.
+- kaolin-bubblegum - Kaolin colorful theme with dark blue background.
+- kaolin-eclipse - a dark purple variant
+- kaolin-galaxy - bright theme based on one of the Sebastian Andaur arts.
+- kaolin-ocean - a dark blue variant.
+- kaolin-temple - dark background with syntax highlighting focus on blue, green and pink shades
+- kaolin-valley-dark - colorful Kaolin theme with brown background.
+- kaolin-valley-light - light variant of kaolin-valley theme.
 
 The rest are one off themes that I found while browsing.
 
