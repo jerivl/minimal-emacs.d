@@ -16,7 +16,10 @@
 
 name: CI
 on:
-  - push
+  workflow_run:
+    workflows: ["Tangle, Commit and Push", "Remove Lines"]
+    types:
+      - completed
 jobs:
   test:
     runs-on: ubuntu-latest
