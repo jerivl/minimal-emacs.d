@@ -8,7 +8,6 @@
 
 (use-package synosaurus
   :ensure t
-  :after corfu
   :config
   (setq synosaurus-backend 'synosaurus-backend-wordnet)
   (setq synosaurus-choose-method 'popup))

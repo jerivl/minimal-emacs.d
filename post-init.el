@@ -142,13 +142,6 @@ If the new path's directories does not exist, create them."
              apheleia-global-mode)
   :hook ((prog-mode . apheleia-mode)))
 
-;; Set up the Language Server Protocol (LSP) servers using Eglot.
-(use-package eglot
-  :ensure nil
-  :commands (eglot-ensure
-             eglot-rename
-             eglot-format-buffer))
-
 ;; Tree-sitter in Emacs is an incremental parsing system introduced in Emacs 29
 ;; that provides precise, high-performance syntax highlighting. It supports a
 ;; broad set of programming languages, including Bash, C, C++, C#, CMake, CSS,
@@ -175,23 +168,6 @@ If the new path's directories does not exist, create them."
  (setq yas-verbosity 0))
 
 (use-package auto-yasnippet :ensure t)
-
-(use-package popup :ensure t)
-
-(use-package corfu-terminal
-  :ensure (:host "https://codeberg.org/akib/emacs-corfu-terminal.git")
-  :config
-  (unless (display-graphic-p)
-  (corfu-terminal-mode +1)))
-
-(use-package kind-icon
-  :ensure t
-  :after corfu
-  ;:custom
-  ; (kind-icon-blend-background t)
-  ; (kind-icon-default-face 'corfu-default) ; only needed with blend-background
-  :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 ;; Corfu enhances in-buffer completion by displaying a compact popup with
 ;; current candidates, positioned either below or above the point. Candidates
@@ -231,6 +207,8 @@ If the new path's directories does not exist, create them."
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
+
+(use-package lsp-bridge :config (global-lsp-bridge-mode))
 
 ;; A file and project explorer for Emacs that displays a structured tree
 ;; layout, similar to file browsers in modern IDEs. It functions as a sidebar
