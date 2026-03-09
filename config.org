@@ -401,10 +401,7 @@ On emacs <31, popup is needed for TTY autocomplete on point. Last I checked it s
 **** lsp-bridge
 This becomes a trivial install with nix handling dependencies, especially since lsp-bridge-mode is on nixpkgs
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
-(use-package lsp-bridge 
-  :config 
-  (global-lsp-bridge-mode)
-  (setq lsp-bridge-python-lsp-server "ty"))
+(use-package lsp-bridge :config (global-lsp-bridge-mode))
 #+END_SRC 
 
 *** Generative AI
