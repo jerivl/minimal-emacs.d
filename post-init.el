@@ -208,10 +208,7 @@ If the new path's directories does not exist, create them."
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
 
-(use-package lsp-bridge 
-  :config 
-  (global-lsp-bridge-mode)
-  (setq lsp-bridge-python-lsp-server "ty"))
+(use-package lsp-bridge :config (global-lsp-bridge-mode))
 
 ;; A file and project explorer for Emacs that displays a structured tree
 ;; layout, similar to file browsers in modern IDEs. It functions as a sidebar
