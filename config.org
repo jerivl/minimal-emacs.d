@@ -55,7 +55,7 @@ This section corresponds to any configuration that will be applied accross all e
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
   ;; The files in this repo are intended to be called at build time by direnv.
   ;; Note that all .el files have had their lexical-binding stripped
-  (use-package envrc :ensure t :hook ((after-init . envrc-global-mode))
+  (use-package envrc :ensure t :hook (after-init . envrc-global-mode))
 #+END_SRC
 
 *** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-elpaca-package-manager][Elpaca package manager]]
