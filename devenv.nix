@@ -108,16 +108,12 @@ let
     defaultInitFile = true;
     package = pkgs.emacs;
     extraEmacsPackages = epkgs: (with epkgs; [
-      
       jinx
       eat
       vterm
       # unsure if I should move lsp bridge here
     ])
-    ++ [
-      emacs-majutsu
-      
-    ];
+    ++ [ emacs-majutsu ];
   };
   
 in 
@@ -132,7 +128,8 @@ in
     cocogitto
     koji
     aicommit2
-    
+    emacs-lsp-booster
+    ty
   ]
   ++ [ emacs-configured ]
   

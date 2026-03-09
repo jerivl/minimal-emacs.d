@@ -279,26 +279,28 @@ I'm a little unsure what to do about yasnippet at the moment in light of directo
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
 ;; Set up the Language Server Protocol (LSP) servers using Eglot.
 (use-package eglot
-  :ensure nil
-  :commands (eglot-ensure
-             eglot-rename
-             eglot-format-buffer))
+  :ensure t)
+(use-package eglot-booster
+  :ensure t ; This pulls from nixpkgs, its not on any of the emacs stores
+  :after eglot
+  :config (eglot-booster-mode))
 #+END_SRC
 
 **** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#tree-sitter-integration-better-syntax-highlighting][treesitter]]
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
-  ;; Tree-sitter in Emacs is an incremental parsing system introduced in Emacs 29
-  ;; that provides precise, high-performance syntax highlighting. It supports a
-  ;; broad set of programming languages, including Bash, C, C++, C#, CMake, CSS,
-  ;; Dockerfile, Go, Java, JavaScript, JSON, Python, Rust, TOML, TypeScript, YAML,
-  ;; Elisp, Lua, Markdown, and many others.
-  (use-package treesit-auto
-  :ensure t
-  :custom
-  (treesit-auto-install 'prompt)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
+;; Tree-sitter in Emacs is an incremental parsing system introduced in Emacs 29
+;; that provides precise, high-performance syntax highlighting. It supports a
+;; broad set of programming languages, including Bash, C, C++, C#, CMake, CSS,
+;; Dockerfile, Go, Java, JavaScript, JSON, Python, Rust, TOML, TypeScript, YAML,
+;; Elisp, Lua, Markdown, and many others.
+(use-package treesit-auto
+:ensure t
+:custom
+(treesit-auto-install 'prompt)
+:config
+(treesit-auto-add-to-auto-mode-alist 'all)
+(global-treesit-auto-mode))
+
 #+END_SRC
 **** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#efficient-template-expansion-with-snippets][yasnippet]]
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
@@ -337,53 +339,53 @@ On emacs <31, popup is needed for TTY autocomplete on point. Last I checked it s
 ;; Corfu enhances in-buffer completion by displaying a compact popup with
 ;; current candidates, positioned either below or above the point. Candidates
 ;; can be selected by navigating up or down.
-    (use-package corfu
-      :ensure t
-      :custom
-      (corfu-cycle t)
-      (corfu-auto t)
-      (corfu-auto-prefix 2)
-      (corfu-auto-delay 0.0)
-      (corfu-quit-at-boundary 'separator)
-      (corfu-echo-documentation 0.25)
-      (corfu-preview-current 'insert)
-      (corfu-preselect-first nil)
-      :bind (:map corfu-map
-                  ("RET" . nil)
-                  ("M-SPC" . corfu-insert-separator)
-                  ("TAB" . corfu-next)
-                  ([tab] . corfu-next)
-                  ("S-TAB" . corfu-prev)
-                  ([backtab] . corfu-prev)
-                  ("S-<return> . corfu-insert"))
-      :init
-      (global-corfu-mode)
-      (corfu-history-mode)
-      :config
-      (add-hook 'eshell-mode-hook
-                (lambda () (setq-local corfu-quit-at-boundary t
-                                       corfu-quit-no-match t
-                                       corfu-auto nil)
-                                       (corfu-mode))))
+(use-package corfu
+  :ensure t
+  :custom
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.0)
+  (corfu-quit-at-boundary 'separator)
+  (corfu-echo-documentation 0.25)
+  (corfu-preview-current 'insert)
+  (corfu-preselect-first nil)
+  :bind (:map corfu-map
+              ("RET" . nil)
+              ("M-SPC" . corfu-insert-separator)
+              ("TAB" . corfu-next)
+              ([tab] . corfu-next)
+              ("S-TAB" . corfu-prev)
+              ([backtab] . corfu-prev)
+              ("S-<return>" . corfu-insert))
+  :init
+  (global-corfu-mode)
+  (corfu-history-mode)
+  :config
+  (add-hook 'eshell-mode-hook
+            (lambda () (setq-local corfu-quit-at-boundary t
+                                   corfu-quit-no-match t
+                                   corfu-auto nil)
+              (corfu-mode))))
 
-    (use-package corfu-terminal :ensure t
-      :init
-      (unless (display-graphic-p)
-      (corfu-terminal-mode +1)))
+(use-package corfu-terminal :ensure t
+  :init
+  (unless (display-graphic-p)
+    (corfu-terminal-mode +1)))
 
-    ;; Cape, or Completion At Point Extensions, extends the capabilities of
-    ;; in-buffer completion. It integrates with Corfu or the default completion UI,
-    ;; by providing additional backends through completion-at-point-functions.
-    (use-package cape
-    :ensure t
-    :commands (cape-dabbrev cape-file cape-elisp-block)
-    :bind ("C-c p" . cape-prefix-map)
-    :init
-    ;; Add to the global default value of `completion-at-point-functions' which is
-    ;; used by `completion-at-point'.
-    (add-hook 'completion-at-point-functions #'cape-dabbrev)
-    (add-hook 'completion-at-point-functions #'cape-file)
-    (add-hook 'completion-at-point-functions #'cape-elisp-block))
+;; Cape, or Completion At Point Extensions, extends the capabilities of
+;; in-buffer completion. It integrates with Corfu or the default completion UI,
+;; by providing additional backends through completion-at-point-functions.
+(use-package cape
+  :ensure t
+  :commands (cape-dabbrev cape-file cape-elisp-block)
+  :bind ("C-c p" . cape-prefix-map)
+  :custom
+  ;; Add to the global default value of `completion-at-point-functions' which is
+  ;; used by `completion-at-point'.
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+      (add-hook 'completion-at-point-functions #'cape-file)
+      (add-hook 'completion-at-point-functions #'cape-elisp-block))
 #+END_SRC
 
 **** lsp-bridge
@@ -401,10 +403,10 @@ This becomes a trivial install with nix handling dependencies, especially since 
 I try not to use these, especially given that most of my time is spent on research or systems programming. I'm staunchly against using it for writing in any capacity that represents my voice and opinions to any other party. However, since this is my personal repo, and no one is really going to look here, I'll let the word calculator summarize some of the commits I make.
 I'm also ok with using LLMs for front end web development as the standard for performance on the modern web is in hell.
 ** Buffers
-Might depreciate Dirvish. Will do it next time I think about this without having used it.
-The only thing keeping me on it is that im still unsure if I like using yazi from within emacs. Even then, most of the features that I use are also covered by treemacs
++Might depreciate Dirvish. Will do it next time I think about this without having used it.+
++The only thing keeping me on it is that im still unsure if I like using yazi from within emacs. Even then, most of the features that I use are also covered by treemacs+
 *** Dirvish: modern file browser
-#+BEGIN_SRC emacs-lisp : post-init.el
+#+BEGIN_SRC emacs-lisp
 ;; Dirvish: drop-in replacement for dired
 (use-package dirvish
   :ensure nil
@@ -723,7 +725,7 @@ The only thing keeping me on it is that im still unsure if I like using yazi fro
       :config
             ;; Remap delete binding based on active region
            (defun my-delete-cmd ()
-               (interactive)
+               (Interactive)
                ; "Kill region if it's active and nonempty. Else delete."
                (if (use-region-p)
                    (meow-kill))
@@ -999,25 +1001,34 @@ I mostly use jj anyway lol.
 (use-package magit-section :ensure t)
 (use-package with-editor :ensure t)
 #+END_SRC
-* Major modes
-** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-markdown-mode-eg-readmemd-syntax][Markdown]]
-*** TODO Move markdown mode to core config, leaving markdown toc to be conditional
-#+BEGIN_SRC emacs-lisp :tangle markdown.el
-    ;; The markdown-mode package provides a major mode for Emacs for syntax
-    ;; highlighting, editing commands, and preview support for Markdown documents.
-    ;; It supports core Markdown syntax as well as extensions like GitHub Flavored
-    ;; Markdown (GFM).
-    (use-package markdown-mode
-        :commands (gfm-mode
-                   gfm-view-mode
-                   markdown-mode
-                   markdown-view-mode)
-        :mode (("\\.markdown\\'" . markdown-mode)
-              ("\\.md\\'" . markdown-mode)
-              ("README\\.md\\'" . gfm-mode))
-        :bind (:map markdown-mode-map
-              ("C-c C-e" . markdown-do)))
+I've been missing the gutter diff from helix
+#+BEGIN_SRC emacs-lisp :tangle post-init.el
+(use-package diff-hl :ensure t :config (global-diff-hl-mode))
+#+END_SRC
+*** Markdown
+#+BEGIN_SRC emacs-lisp :tangle post-init.el
+;; The markdown-mode package provides a major mode for Emacs for syntax
+;; highlighting, editing commands, and preview support for Markdown documents.
+;; It supports core Markdown syntax as well as extensions like GitHub Flavored
+;; Markdown (GFM).
 
+(use-package markdown-mode
+    :commands (gfm-mode
+               gfm-view-mode
+               markdown-mode
+               markdown-view-mode)
+    :mode (("\\.markdown\\'" . markdown-mode)
+          ("\\.md\\'" . markdown-mode)
+          ("README\\.md\\'" . gfm-mode))
+    :bind (:map markdown-mode-map
+          ("C-c C-e" . markdown-do)))
+
+#+END_SRC
+
+
+* Major modes
+** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-markdown-mode-eg-readmemd-syntax][Markdown Additions]]
+#+BEGIN_SRC emacs-lisp :tangle markdown.el
   ;; Automatically generate a table of contents when editing Markdown files
   (use-package markdown-toc
       :ensure t
@@ -1080,7 +1091,7 @@ Spellcheck provided by jinx for textmodes. Emacs must be compiled for use with d
 This might be overkill for programming modes as it reads the entire buffer for errors.
 TODO make jinx ignore org-babel source blocks
 #+BEGIN_SRC emacs-lisp :tangle writing.el
-k(use-package jinx
+(use-package jinx
   :bind (("M-$" . jinx-correct)
          ("C-M-$" . jinx-languages))
   :custom
@@ -1098,7 +1109,7 @@ Config suggested by minimal-emacs
   ;; scheduling, deadlines, time tracking, and exporting to multiple formats
   ;; including HTML, LaTeX, PDF, and Markdown.
   (use-package org
-      :ensure t
+      ;         ensure was originally here, but something about nixpkgs was causing tangle to break
       :commands (org-mode org-version)
       :mode
       ("\\.org\\'" . org-mode)
@@ -1114,49 +1125,58 @@ Config suggested by minimal-emacs
       (org-startup-truncated t)
       :bind
       (:map org-mode-map
-            ("C-M-;" . org-comment-dwim)   ;; pick some comfortable binding
+            ("#" . org-comment-dwim)   ;; pick some comfortable binding
        ))
-  ; Shows emphasis syntax when hovered, a la Obsidian
-  (use-package org-appear
-      :ensure t
-      :custom
-      (add-hook 'org-mode-hook 'org-appear-mode))
 
 #+END_SRC
 Trying org-modern again. The last time I tried it wasn't consistent about indentation. Update: Its a lot better on linux than darwin
-#+BEGIN_SRC emacs-lisp :tangle post-init.el
-(use-package org-modern
-  :ensure t
-  :config
- (setq org-modern-table nil)
- (add-hook 'org-mode-hook #'org-modern-mode))
+OK for some reason, all of these plugins (plus org from nixpkgs) break tangling
+Removing these for a while. Might try to add them from a different package manager,
+but that might be ok since most of these are visual enhancement.
+Ok cool it seems they don't break anything if these arem't installed while devenv builds.
+Might try to see if it might works with straight or elpaca. I'd rather keep everything declarative
+Just run as elisp for now <3
+#+BEGIN_SRC emacs-lisp
+    ; Shows emphasis syntax when hovered, a la Obsidian
+    (use-package org-appear
+      :ensure t
+        :custom
+        (add-hook 'org-mode-hook 'org-appear-mode))
+
+  (use-package org-modern
+    :ensure t
+    :config
+   (setq org-modern-table nil)
+   (add-hook 'org-mode-hook #'org-modern-mode))
+  ; Allow transclusion
+  (use-package org-transclusion :ensure t)
+    (use-package org-tanglesync
+     :ensure t
+     :hook ((org-mode . org-tanglesync-mode)
+            ;; enable watch-mode globally:
+            ((prog-mode text-mode) . org-tanglesync-watch-mode))
+     :custom
+     (setq org-tanglesync-watch-files "config.org")
+     :bind
+     (( "C-c M-i" . org-tanglesync-process-buffer-interactive)
+      ( "C-c M-a" . org-tanglesync-process-buffer-automatic)))
+
 #+END_SRC
 
 *** Transclusion
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
-; Allow transclusion
-(use-package org-transclusion :ensure t)
+
 #+END_SRC
 *** Babel-ob
 **** Auto-tangle / sync
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
-;; Automatically tangle org-babel source blocks on save
-(use-package org-auto-tangle
-  :ensure t
-  :init
-  ;; The minor mode can also be automatically activated for a certain modes.
-  (add-hook 'org-mode-hook #'org-auto-tangle-mode))
+  ;; Automatically tangle org-babel source blocks on save
+  (use-package org-auto-tangle
+   :ensure t
+   :init
+   ;; The minor mode can also be automatically activated for a certain modes.
+   (add-hook 'org-mode-hook #'org-auto-tangle-mode))
 
-(use-package org-tanglesync
-  :ensure t
-  :hook ((org-mode . org-tanglesync-mode)
-         ;; enable watch-mode globally:
-         ((prog-mode text-mode) . org-tanglesync-watch-mode))
-  :custom
-  (org-tanglesync-watch-files '("conf.org" "myotherconf.org"))
-  :bind
-  (( "C-c M-i" . org-tanglesync-process-buffer-interactive)
-   ( "C-c M-a" . org-tanglesync-process-buffer-automatic)))
 
 #+END_SRC
 *** Export-ox
@@ -1185,7 +1205,7 @@ The colors were weird in code blocks and the modeline on the light themes for me
 (use-package catppuccin-theme
   :ensure t
   :config
-  (setq catppuccin-flavor 'frappe) ;; or 'latte, 'macchiato, or 'mocha
+  (setq catppuccin-flavor 'latte)
   (load-theme 'catppuccin :no-confirm))
 #+END_SRC
 Light to dark: 🌻 Latte 🪴 Frappé 🌺 Macchiato 🌿 Mocha
