@@ -301,6 +301,7 @@ I'm a little unsure what to do about yasnippet at the moment in light of directo
   :commands (eglot-ensure
              eglot-rename
              eglot-format-buffer))
+#+END_SRC
 
 **** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#tree-sitter-integration-better-syntax-highlighting][treesitter]]
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
@@ -399,8 +400,13 @@ On emacs <31, popup is needed for TTY autocomplete on point. Last I checked it s
 
 **** lsp-bridge
 This becomes a trivial install with nix handling dependencies, especially since lsp-bridge-mode is on nixpkgs
-#+BEGIN_SRC emacs-lisp
-(use-package lsp-bridge :config (global-lsp-bridge-mode))
+#+BEGIN_SRC emacs-lisp :noweb yes
+(use-package lsp-bridge
+  :ensure nil
+  :config
+  (global-lsp-bridge-mode)
+  <<lsp-bridge-python>>
+)
 #+END_SRC
 
 *** Generative AI
@@ -1026,6 +1032,13 @@ I mostly use jj anyway lol.
 (use-package python-pytest :ensure t)
 #+END_SRC
 
+#+CAPTION: LSP bridge settings for python
+#+TITLE: lsp-bridge-python
+#+BEGIN_SRC emacs-lisp
+  (setq lsp-bridge-python-lsp-server "ty")
+  (setq lsp-bridge-python-multi-lsp-server "ty_ruff"))
+
+
 ** Hledger
 #+BEGIN_SRC emacs-lisp :tangle hledger.el
 (use-package hledger-mode :ensure t)
@@ -1063,7 +1076,7 @@ Spellcheck provided by jinx for textmodes. Emacs must be compiled for use with d
 This might be overkill for programming modes as it reads the entire buffer for errors.
 TODO make jinx ignore org-babel source blocks
 #+BEGIN_SRC emacs-lisp :tangle writing.el
-(use-package jinx
+k(use-package jinx
   :bind (("M-$" . jinx-correct)
          ("C-M-$" . jinx-languages))
   :custom
