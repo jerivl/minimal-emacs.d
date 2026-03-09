@@ -1121,7 +1121,7 @@ Trying org-modern again. The last time I tried it wasn't consistent about indent
 ; Allow transclusion
 (use-package org-transclusion :ensure t)
 #+END_SRC
-*** Babel
+*** Babel-ob
 **** Auto-tangle / sync
 ***** TODO Test solo. Still haven't figured out if it's working
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
@@ -1144,12 +1144,16 @@ Trying org-modern again. The last time I tried it wasn't consistent about indent
    ( "C-c M-a" . org-tanglesync-process-buffer-automatic)))
 
 #+END_SRC
-*** Export
+*** Export-ox
 
 * [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#changing-the-default-theme][Theme]]
 ** Active theme
 #+BEGIN_SRC emacs-lisp :tangle post-init.el :noweb yes
 <<themes:catppuccin>>
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle post-init.el
+(use-package doom-modeline :ensure t :init (doom-modeline-mode 1))
 #+END_SRC
 
 ** Other themes that I like
