@@ -11,7 +11,7 @@ The main branch is intended to be a stable branch for me to apply to new project
 This section corresponds to any configuration that will be applied accross all emacs instances, regardless of the answer to the copier questions
 ** Runtime-Internals
 *** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#optimization-native-compilation][Assist native compilation with compile-angel]]
-#+BEGIN_SRC emacs-lisp :tangle post-init.el
+#+BEGIN_SRC emacs-lisp
   ;; Native compilation enhances Emacs performance by converting Elisp code into
   ;; native machine code, resulting in faster execution and improved
   ;; responsiveness.
