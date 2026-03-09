@@ -51,10 +51,10 @@ This section corresponds to any configuration that will be applied accross all e
 
 #+END_SRC
 
-*** Direnv mode
+*** Direnv integration
 Since I'm manageing most of my developer packages through devenv, I may as well install the direnv extension
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
-  (use-package direnv :ensure t :config (direnv-mode))
+  (use-package envrc :hook (after-init . envrc-global-mode))
 #+END_SRC
 
 *** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-elpaca-package-manager][Elpaca package manager]]
