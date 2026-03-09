@@ -1,0 +1,46 @@
+---
+#
+# This file is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# This file is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.
+#
+
+name: Tangle, commit and push
+on: push
+jobs:
+  tangle:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        emacs-version:
+          - 30.1
+        python-version:
+          - 3.12
+    steps:
+      # Cask
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # The token is required to push changes back to the repository
+          token: ${{ secrets.GITHUB_TOKEN }} 
+
+      - uses: purcell/setup-emacs@master
+        with:
+          version: ${{ matrix.emacs-version }}
+
+      - name: Compile
+        run: |
+          emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "config.org")'
+      
+      - name: Add, commit, and push
+        uses: actions4git/add-commit-push@v1.0.0
+    
