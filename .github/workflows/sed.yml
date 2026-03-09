@@ -1,4 +1,4 @@
-name: Create file and commit
+name: Remove lines
 on:
   push:
     paths:
