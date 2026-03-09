@@ -51,12 +51,6 @@ This section corresponds to any configuration that will be applied accross all e
 
 #+END_SRC
 
-*** Direnv integration
-Since I'm manageing most of my developer packages through devenv, I may as well install the direnv extension
-#+BEGIN_SRC emacs-lisp :tangle post-init.el
-  (use-package envrc :hook (after-init . envrc-global-mode) :custom (setq envrc-debug t))
-#+END_SRC
-
 *** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-elpaca-package-manager][Elpaca package manager]]
 Currently I'm letting nix handle all of the external dependencies for emacs through devenv. I feel much more comfortable with the approach of scoping derivations per project rather than having arbitrary packages cluttering my main profile.
 #+BEGIN_SRC emacs-lisp :tangle pre-early-init.el
