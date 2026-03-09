@@ -1133,78 +1133,90 @@ Trying org-modern again. The last time I tried it wasn't consistent about indent
 *** Export
 
 * [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#changing-the-default-theme][Theme]]
-** TODO create noweb blocks per theme
-#+BEGIN_SRC emacs-lisp :tangle post-init.el
-(use-package doric-themes :ensure t)
-(load-theme 'modus-vivendi-deuteranopia t)
+** Active theme
+#+BEGIN_SRC emacs-lisp :tangle post-init.el :noweb yes
+<<themes:catppuccin>>
 #+END_SRC
+
 ** Other themes that I like
+#+NAME: themes:doric
+#+CAPTION: Faves: doric-*[cherry, jade, wind, plum, beach, mermaid]
 #+BEGIN_SRC emacs-lisp
-(mapc #'disable-theme custom-enabled-themes)  ; Disable all active themesOA
-(load-theme 'modus-vivendi-deuteranopia t)  ; Load the built-in theme
+(use-package doric-themes :ensure t :config  (doric-themes-select 'doric-jade))
+#+END_SRC
 
-(use-package lambda-themes :ensure (:host github :repo "lambda-emacs/lambda-themes")
-  :custom
-  (lambda-themes-set-italic-comments t)
-  (lambda-themes-set-italic-keywords t)
-  (lambda-themes-set-variable-pitch t)
-  :config
-  ;; load preferred theme
-  (load-theme 'lambda-dark))
-
-(use-package doric-themes
-  :ensure t
-  :config
-  (doric-themes-select 'doric-wind))
+#+NAME: themes:catppuccin
+#+CAPTION: The myth. The legend. Four flavors that are all cute and soft <3
+#+BEGIN_SRC emacs-lisp
 (use-package catppuccin-theme
   :ensure t
   :config
-  ;(load-theme 'catppuccin t)
-  ;(setq catppuccin-flavor 'frappe) ;; or 'latte, 'macchiato, or 'mocha
-  ;(setq catppuccin-flavor 'latte)
-  ;(setq catppuccin-flavor 'mocha)
-  ;(setq catppuccin-flavor 'macchiato)
-  ;(catppuccin-reload))
+  (setq catppuccin-flavor 'frappe) ;; or 'latte, 'macchiato, or 'mocha
+  (load-theme 'catppuccin :no-confirm))
+#+END_SRC
+Light to dark: 🌻 Latte 🪴 Frappé 🌺 Macchiato 🌿 Mocha
 
+#+NAME: themes:kaolin
+#+CAPTION: Favorites: kaolin-*[bubblegum, aurora, eclipse, temple, valley-light]
+#+BEGIN_SRC emacs-lisp
 (use-package all-the-icons :ensure t)
 (use-package kaolin-themes
   :ensure t
   :after all-the-icons
   :config
-  ;(kaolin-treemacs-theme)
-  ;(load-theme 'kaolin-dark t)
-  ;(load-theme 'kaolin-light t)
-  ;(load-theme 'kaolin-aurora t)
-  ;(load-theme 'kaolin-bubblegum t)
-  ;(load-theme 'kaolin-eclipse t)
-  ;(load-theme 'kaolin-galaxy t)
-  ;(load-theme 'kaolin-ocean t)
-  ;(load-theme 'kaolin-temple t)
-  ;(load-theme 'kaolin-valley-dark t)
-  ;(load-theme 'kaolin-valley-light t))
+  (kaolin-treemacs-theme)
+  (load-theme 'kaolin-dark t))
+#+END_SRC
+kaolin-dark - a dark jade variant inspired by Sierra.vim
+kaolin-light - light variant of the original kaolin-dark.
+kaolin-aurora - Kaolin meets polar lights.
+kaolin-bubblegum - Kaolin colorful theme with dark blue background.
+kaolin-eclipse - a dark purple variant
+kaolin-galaxy - bright theme based on one of the Sebastian Andaur arts.
+kaolin-ocean - a dark blue variant.
+kaolin-temple - dark background with syntax highlighting focus on blue, green and pink shades
+kaolin-valley-dark - colorful Kaolin theme with brown background.
+kaolin-valley-light - light variant of kaolin-valley theme.
 
-(use-package jazz-theme
-  :ensure t
-  :config
-  ;(load-theme 'jazz t))
-(use-package exotica-theme
-  :ensure t
-  :config
-  ;(load-theme 'exotica t))
-(use-package pink-bliss-uwu-theme
-  :ensure t
-  :config
-  ;(load-theme 'pink-bliss-uwu t))
+The rest are one off themes that I found while browsing.
+
+#+NAME: themes:jazz
+#+CAPTION: Brassy!
+#+BEGIN_SRC emacs-lisp
+(use-package jazz-theme :ensure t :config (load-theme 'jazz t))
+#+END_SRC
+
+#+NAME: themes:exotica
+#+CAPTION: Ngl I forgot what this looked like
+#+BEGIN_SRC emacs-lisp
+(use-package exotica-theme :ensure t :config (load-theme 'exotica t))
+#+END_SRC
+
+#+NAME: themes:uwu
+#+CAPTION: The pinkest theme ever
+#+BEGIN_SRC emacs-lisp
+(use-package pink-bliss-uwu-theme :ensure t :config (load-theme 'pink-bliss-uwu t))
+#+END_SRC
+
+#+NAME: themes:rebecca
+#+CAPTION: She was really blue and cyberpunky!
+#+BEGIN_SRC emacs-lisp
+
 (use-package rebecca-theme
   :ensure t
   :config
   ;(load-theme 'rebecca t))
-(use-package django-theme
-  :ensure t
-  :config
-  ;(load-theme 'django t))
-(use-package white-sand-theme
-  :ensure t
-  :config
-  ;(load-theme 'white-sand t))
+#+END_SRC
+
+#+NAME: themes:django
+#+CAPTION: Greeen
+#+BEGIN_SRC emacs-lisp
+
+(use-package django-theme :ensure t :config (load-theme 'django t))
+#+END_SRC
+
+#+NAME: themes:white-sand
+#+CAPTION: One of my fave light themes
+#+BEGIN_SRC emacs-lisp
+(use-package white-sand-theme :ensure t :config (load-theme 'white-sand t))
 #+END_SRC
