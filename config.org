@@ -68,7 +68,7 @@ Currently I'm letting nix handle all of the external dependencies for emacs thro
 
 #+END_SRC
 Previously I was using elpaca, and it was tangled into pre-init.el
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
    ;; Elpaca bootstrap
 (defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
@@ -399,9 +399,9 @@ On emacs <31, popup is needed for TTY autocomplete on point. Last I checked it s
 #+END_SRC
 *** Generative AI
 I try not to use these, especially given that most of my time is spent on research or systems programming. I'm staunchly against using it for writing in any capacity that represents my voice and opinions to any other party. However, since this is my personal repo, and no one is really going to look here, I'll let the word calculator summarize some of the commits I make.
-I'm also ok with using LLMs for front end web development as the standard for performance on the modern web is in hell. 
+I'm also ok with using LLMs for front end web development as the standard for performance on the modern web is in hell.
 ** Buffers
-Might depreciate Dirvish. Will do it next time I think about this without having used it. 
+Might depreciate Dirvish. Will do it next time I think about this without having used it.
 The only thing keeping me on it is that im still unsure if I like using yazi from within emacs. Even then, most of the features that I use are also covered by treemacs
 *** Dirvish: modern file browser
 #+BEGIN_SRC emacs-lisp : post-init.el
@@ -973,7 +973,14 @@ Vundo uses the standard undo/redo commands whereas undo-tree doesn't
 ;; Run M-x free-keys to display keys that are unbound
 (use-package free-keys :ensure t)
 #+END_SRC
-
+*** Version control
+Perhaps putting magit under discoverabilty is a little disingenuous and maybe version control belongs in one of the categories. Nonetheless, I don't think that anyone would argue that magit is a great tool for using new functions of git, so I thought this was best.
+I mostly use jj anyway lol.
+#+BEGIN_SRC emacs-lisp :tangle post-init.el
+(use-package magit :ensure t)
+(use-package magit-section :ensure t)
+(use-package with-editor :ensure t)
+#+END_SRC
 * Major modes
 ** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-markdown-mode-eg-readmemd-syntax][Markdown]]
 *** TODO Move markdown mode to core config, leaving markdown toc to be conditional

@@ -1,2 +1,21 @@
-!early-init.el
-!init.el
+# Source - https://stackoverflow.com/a/987162
+
+# Posted by Joakim Elofsson, modified by community. See post 'Timeline' for change history
+
+# Retrieved 2026-03-09, License - CC BY-SA 3.0
+
+# Ignore everything
+*
+
+# Even the hidden things
+.devenv/*
+.direnv/*
+
+# But not these files...
+!.gitignore
+!config.org
+# etc...
+
+# ...even if they are in subdirectories
+!*/
+

@@ -751,6 +751,10 @@ If the new path's directories does not exist, create them."
 ;; Run M-x free-keys to display keys that are unbound
 (use-package free-keys :ensure t)
 
+(use-package magit :ensure t)
+(use-package magit-section :ensure t)
+(use-package with-editor :ensure t)
+
 ;; Org mode is a major mode designed for organizing notes, planning, task
 ;; management, and authoring documents using plain text with a simple and
 ;; expressive markup syntax. It supports hierarchical outlines, TODO lists,
