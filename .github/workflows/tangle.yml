@@ -15,7 +15,13 @@
 #
 
 name: Tangle, commit and push
-on: push
+on:
+  push:
+    paths:
+      - 'config.org'
+  pull_request:
+    paths:
+      - 'config.org'
 jobs:
   tangle:
     runs-on: ubuntu-latest
