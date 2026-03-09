@@ -11,7 +11,7 @@ The main branch is intended to be a stable branch for me to apply to new project
 This section corresponds to any configuration that will be applied accross all emacs instances, regardless of the answer to the copier questions
 ** Runtime-Internals
 *** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#optimization-native-compilation][Assist native compilation with compile-angel]]
-#+BEGIN_SRC emacs-lisp : post-init.el
+#+BEGIN_SRC emacs-lisp :tangle post-init.el
   ;; Native compilation enhances Emacs performance by converting Elisp code into
   ;; native machine code, resulting in faster execution and improved
   ;; responsiveness.
@@ -49,6 +49,13 @@ This section corresponds to any configuration that will be applied accross all e
   ;; the mode `compile-angel-on-load-mode' was activated.
   (compile-angel-on-load-mode 1))
 
+#+END_SRC
+
+*** Direnv integration
+#+BEGIN_SRC emacs-lisp :tangle post-init.el
+  ;; The files in this repo are intended to be called at build time by direnv.
+  ;; Note that all .el files have had their lexical-binding stripped
+  (use-package envrc :ensure t :hook ((after-init . envrc-global-mode))
 #+END_SRC
 
 *** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-elpaca-package-manager][Elpaca package manager]]
