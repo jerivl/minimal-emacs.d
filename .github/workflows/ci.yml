@@ -35,5 +35,5 @@ jobs:
 
       - name: Compile
         run: |
-          cat pre-early-init.el early-init.el init.el post-init.el | tee tmp
-          emacs -batch -L . --eval "(setq user-emacs-directory "${pwd}")"  -f batch-byte-compile tmp
+          cat lexical-binding '(setq user-emacs-directory "${GITHUB_WORKSPACE}")' pre-early-init.el early-init.el init.el post-init.el | tee tmp
+          emacs -batch -L . -f batch-byte-compile tmp
