@@ -338,7 +338,7 @@ I'm a little unsure what to do about yasnippet at the moment in light of directo
 
 **** corfu
 On emacs <31, popup is needed for TTY autocomplete on point. Last I checked it seemed to be needed on macos, but I could forgo that dependency on linux. Also note that popup is also a dependency for synosaurus
-#+BEGIN_SRC emacs-lisp :tangle 
+#+BEGIN_SRC emacs-lisp 
 (use-package popup :ensure t)
 
 (use-package corfu-terminal
