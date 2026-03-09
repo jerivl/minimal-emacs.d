@@ -404,8 +404,7 @@ This becomes a trivial install with nix handling dependencies, especially since 
 (use-package lsp-bridge 
   :config 
   (global-lsp-bridge-mode)
-  (setq lsp-bridge-python-lsp-server "ty")
-  (setq lsp-bridge-python-multi-lsp-server "ty_ruff"))
+  (setq lsp-bridge-python-lsp-server "ty"))
 #+END_SRC 
 
 *** Generative AI
