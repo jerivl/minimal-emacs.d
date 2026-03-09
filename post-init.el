@@ -808,11 +808,7 @@ If the new path's directories does not exist, create them."
   (( "C-c M-i" . org-tanglesync-process-buffer-interactive)
    ( "C-c M-a" . org-tanglesync-process-buffer-automatic)))
 
-(use-package lambda-themes :ensure (:host github :repo "lambda-emacs/lambda-themes")
-  :custom
-  (lambda-themes-set-italic-comments t)
-  (lambda-themes-set-italic-keywords t)
-  (lambda-themes-set-variable-pitch t)
+(use-package doric-themes
+  :ensure t
   :config
-  ;; load preferred theme
-  (load-theme 'lambda-dark))
+  (doric-themes-select 'doric-wind))
