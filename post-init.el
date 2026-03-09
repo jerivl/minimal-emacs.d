@@ -809,3 +809,4 @@ If the new path's directories does not exist, create them."
    ( "C-c M-a" . org-tanglesync-process-buffer-automatic)))
 
 (use-package doric-themes :ensure t)
+(load-theme 'modus-vivendi-deuteranopia t)
