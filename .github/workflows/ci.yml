@@ -33,8 +33,9 @@ jobs:
         with:
           version: ${{ matrix.emacs-version }}
 
-      - name: Compile
+      - name: Compile and check eval
         run: |
           echo '(setq user-emacs-directory "${GITHUB_WORKSPACE}")' | tee dir
           cat lexical-binding dir pre-early-init.el early-init.el init.el post-init.el | tee tmp
-          emacs -batch -L . -f batch-byte-compile tmp
+          emacs -batch -L . --eval '(progn (insert "Hello, World!") (write-file "output.txt"))' -f batch-byte-compile tmp
+          cat output.txt
