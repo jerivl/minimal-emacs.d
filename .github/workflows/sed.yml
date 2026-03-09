@@ -1,5 +1,13 @@
 name: Create file and commit
-on: push
+on:
+  push:
+    paths:
+      - 'pre-init.el'
+      - 'init.el'
+  pull_request:
+    paths:
+      - 'pre-init.el'
+      - 'init.el'
 jobs:
   build:
     runs-on: ubuntu-latest
