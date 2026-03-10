@@ -276,6 +276,13 @@ To adopt standardized code styles in the wild
              apheleia-global-mode)
   :hook ((prog-mode . apheleia-mode)))
 #+END_SRC
+*** Syntax checkers
+**** Flycheck
+#+BEGIN_SRC emacs-lisp :tangle post-init.el
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+#+END_SRC
 *** Completion
 **** TODO: eglot + lsp-booster
 like the rest of emacs, is constrained to a single thread, but the lsp-booster plugin (and the corresponding eglot-booster plugin) calls external code to open up multithreading. This was difficult to set up dependencies on MacOS but it should be fine if I call the nixpkgs version with devenv.
