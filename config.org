@@ -926,10 +926,22 @@ I'm also ok with using LLMs for front end web development as the standard for pe
   :hook
   (emacs-lisp-mode . highlight-defined-mode))
 
+;; Parenthesis balancing and indentation for lisps
 (use-package parinfer-rust-mode
   :ensure t
   :hook
   (emacs-lisp-mode . parinfer-rust-mode))
+
+;; Parenthesis parser
+(use-package puni
+  :ensure t
+  :init
+  ;; The autoloads of Puni are set up so you can enable `puni-mode` or
+  ;; `puni-global-mode` before `puni` is actually loaded. Only after you press
+  ;; any key that calls Puni commands, it's loaded.
+  (puni-global-mode)
+  (add-hook 'term-mode-hook #'puni-disable-puni-mode))
+
 ;; Prevent parenthesis imbalance
 ;; (use-package paredit
 ;;   :ensure t
