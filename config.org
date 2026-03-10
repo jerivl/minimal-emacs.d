@@ -749,7 +749,9 @@ I'm also ok with using LLMs for front end web development as the standard for pe
             (meow-motion-define-key
              '("j" . meow-next)
              '("k" . meow-prev)
-             '("<escape>" . ignore))
+             '("<escape>" . ignore)
+             '("~" . meow-keypad)
+             '("SPC" . kirigami-toggle-fold))
             (meow-leader-define-key
              ;; Use SPC (0-9) for digit arguments.
              '("1" . meow-digit-argument)
@@ -765,6 +767,8 @@ I'm also ok with using LLMs for front end web development as the standard for pe
              '("/" . meow-keypad-describe-key)
              '("?" . meow-cheatsheet))
             (meow-normal-define-key
+             '("SPC" . kirigami-toggle-fold)
+             '("~" . meow-keypad)
              '("0" . meow-expand-0)
              '("9" . meow-expand-9)
              '("8" . meow-expand-8)
@@ -891,11 +895,7 @@ I'm also ok with using LLMs for front end web development as the standard for pe
 :commands (undo-fu-only-undo
            undo-fu-only-redo
            undo-fu-only-redo-all
-           undo-fu-disable-checkpoint)
-:config (global-unset-key (kbd "C-z"))
-        (global-unset-key (kbd "C-Z"))
-        (global-set-key (kbd "C-z") 'undo-fu-only-undo)
-        (global-set-key (kbd "C-Z") 'undo-fu-only-redo))
+           undo-fu-disable-checkpoint))
 
 ;; The undo-fu-session package complements undo-fu by enabling the saving
 ;; and restoration of undo history across Emacs sessions, even after restarting.
