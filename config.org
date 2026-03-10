@@ -910,7 +910,7 @@ I'm also ok with using LLMs for front end web development as the standard for pe
     :commands undo-fu-session-global-mode
     :hook (after-init . undo-fu-session-global-mode))
 #+END_SRC
-*** TODO Split this, most of it elisp specific: [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#enhancing-the-elisp-development-experience][Enhancing the Elisp development experience]]
+*** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#enhancing-the-elisp-development-experience][Enhancing the Elisp development experience]]
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
 ;; Enables automatic indentation of code while typing
 (use-package aggressive-indent
@@ -926,22 +926,18 @@ I'm also ok with using LLMs for front end web development as the standard for pe
   :hook
   (emacs-lisp-mode . highlight-defined-mode))
 
-;; Prevent parenthesis imbalance
-(use-package paredit
+(use-package parinfer-rust-mode
   :ensure t
-  :commands paredit-mode
   :hook
-  (emacs-lisp-mode . paredit-mode)
-  :config
-  (define-key paredit-mode-map (kbd "RET") nil))
-
-;; For paredit+Evil mode users: enhances paredit with Evil mode compatibility
-;; --------------------------------------------------------------------------
-;; (use-package enhanced-evil-paredit
+  (emacs-lisp-mode . parinfer-rust-mode))
+;; Prevent parenthesis imbalance
+;; (use-package paredit
 ;;   :ensure t
-;;   :commands enhanced-evil-paredit-mode
+;;   :commands paredit-mode
 ;;   :hook
-;;   (paredit-mode . enhanced-evil-paredit-mode))
+;;   (emacs-lisp-mode . paredit-mode)
+;;   :config
+;;   (define-key paredit-mode-map (kbd "RET") nil))
 
 ;; Displays visible indicators for page breaks
 (use-package page-break-lines

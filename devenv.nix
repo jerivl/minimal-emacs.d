@@ -87,12 +87,11 @@ let
   '';
   emacs-early-init = builtins.readFile "${config.git.root}/early-init.el";
   emacs-post-early-init = "";
-  emacs-pre-init = "";
+  emacs-pre-init = ''
+    (setq parinfer-rust-library "${pkgs.parinfer-rust-emacs}/lib/libparinfer_rust.so")
+  '';
   emacs-init = builtins.readFile "${config.git.root}/init.el";
   emacs-post-init = (builtins.readFile "${config.git.root}/post-init.el") + ''
-    (use-package magit :ensure t)
-    (use-package magit-section :ensure t)
-    (use-package with-editor :ensure t)
     (require 'majutsu)
   '';
   emacs-config = lib.strings.concatLines [
@@ -111,6 +110,7 @@ let
       jinx
       eat
       vterm
+      parinfer-rust-mode
       # unsure if I should move lsp bridge here
     ])
     ++ [ emacs-majutsu ];
@@ -129,6 +129,7 @@ in
     koji
     aicommit2
     emacs-lsp-booster
+    parinfer-rust-emacs
     ty
   ]
   ++ [ emacs-configured ]
