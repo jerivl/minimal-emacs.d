@@ -1105,6 +1105,36 @@ I've been missing the gutter diff from helix
 (use-package agenix :ensure t)
  #+END_SRC
 
+** Flashcards
+*** TODO Anki ankiPlugins.ankiConnect and curl are required
+#+BEGIN_SRC emacs-lisp :tangle anki.el
+;; Org mode Anki cards
+(use-package anki-editor :ensure t)
+
+;; Anki plugin for opening cards in org-mode
+((use-package anki-editor-view
+   :ensure t
+   :config
+   (setq anki-editor-view-files (list org-directory))))
+
+;; Import org-mode notes into Anki
+;;
+;; Start Anki with AnkiConnect installed
+;; - Set destination deck name, either as:
+;;     (customize-set-variable 'org-anki-default-deck "my-target-deck") in your .emacs
+;;     #+ANKI_DECK: my-target-deck on top of an .org file
+;;     :ANKI_DECK: my-target-deck in the properties’ drawer of the item
+;;     Note that deck mentioned in the above ways must pre-exist (it has to be separately created in the Anki app)
+;; - Run org-anki-sync-entry to sync org entry under cursor Note: the card browser must be closed while synchronizing, as it won’t update the note otherwise (issue).
+;; - Run org-anki-delete-entry to delete entry under cursor
+(use-package org-anki :ensure t)
+
+(use-package gnosis
+    :ensure t
+    :config
+    (gnosis-modeline-mode)
+    :bind (("C-c g" . gnosis-dashboard)))
+#+END_SRC
 ** Hledger
 #+BEGIN_SRC emacs-lisp :tangle hledger.el
 (use-package hledger-mode :ensure t)
@@ -1115,7 +1145,7 @@ I've been missing the gutter diff from helix
 (use-package csv-mode :ensure t)
 #+END_SRC
 
-** Text
+** Writing
 *** Write-good-mode
 Modern implementation of [[https://matt.might.net/articles/shell-scripts-for-passive-voice-weasel-words-duplicates/][weasle word finder]]
 #+BEGIN_SRC emacs-lisp :tangle writing.el
@@ -1149,6 +1179,8 @@ TODO make jinx ignore org-babel source blocks
   (dolist (hook '(text-mode-hook conf-mode-hook))
   (add-hook hook #'jinx-mode)))
 #+END_SRC
+*** Citations
+
 ** Org
 *** Most of this should be moved to core config, leaving behind any mode specific ob or ox modules
 *** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-org-mode][Base]]
