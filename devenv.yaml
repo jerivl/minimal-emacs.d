@@ -2,20 +2,21 @@
 inputs:
   nixpkgs:
     url: github:nixos/nixpkgs/release-25.11
+  nixpkgs-unstable:
+    url: github:nixos/nixpkgs/nixos-unstable
   treefmt-nix:
     url: github:numtide/treefmt-nix
     inputs:
       nixpkgs:
-        follows: nixpkgs  
+        follows: nixpkgs
 
-# TODO Turn these off if not needed  
+# TODO Turn these off if not needed
 # Access secrets as config.secretspec.secrets.<secret>
 secretspec:
   enable: true
-  
+
 # If you're using non-OSS software, you can set allowUnfree to true.
 allowUnfree: true
-impure: true
 
 # If you're willing to use a package that's vulnerable
 # permittedInsecurePackages:
