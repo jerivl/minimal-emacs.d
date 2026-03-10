@@ -365,12 +365,12 @@ On emacs <31, popup is needed for TTY autocomplete on point. Last I checked it s
   (corfu-preselect-first nil)
   :bind (:map corfu-map
               ("RET" . nil)
-              ("M-SPC" . corfu-insert-separator)
-              ("TAB" . corfu-next)
-              ([tab] . corfu-next)
+              ;("M-SPC" . corfu-insert-separator)
+              ("M-TAB" . corfu-next)
+              ;([tab] . corfu-next)
               ("S-TAB" . corfu-prev)
-              ([backtab] . corfu-prev)
-              ("S-<return>" . corfu-insert))
+              ;([backtab] . corfu-prev)
+              ("TAB" . corfu-insert))
   :init
   (global-corfu-mode)
   (corfu-history-mode)
