@@ -616,8 +616,8 @@ I'm also ok with using LLMs for front end web development as the standard for pe
              embark-bindings
              embark-prefix-help-command)
   :bind
-  (("SPC" . embark-act)         ;; pick some comfortable binding
-   ("M-SPC" . embark-dwim)        ;; good alternative: M-.
+  (("C-;" . embark-act)         ;; pick some comfortable binding
+   ("C-." . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
   :init
@@ -724,7 +724,7 @@ I'm also ok with using LLMs for front end web development as the standard for pe
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
    consult--source-bookmark consult--source-file-register
-   consult--source-recent-file consult--source-project-recent-file
+;   consult--source-recent-file consult--source-project-recent-file
    ;; :preview-key "M-."
    :preview-key '(:debounce 0.4 any))
    (setq consult-narrow-key "<"))
@@ -734,136 +734,139 @@ I'm also ok with using LLMs for front end web development as the standard for pe
 *** [[https://github.com/meow-edit/meow][Meow: modal editing]]
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
 (use-package meow
-      :ensure t
-      :config
-            ;; Remap delete binding based on active region
-           (defun my-delete-cmd ()
-               (Interactive)
-               ; "Kill region if it's active and nonempty. Else delete."
-               (if (use-region-p)
-                   (meow-kill))
-                 (meow-delete))
+  :ensure t
+  :config
+  ;; Remap delete binding based on active region
+  (defun my-delete-cmd ()
+    (Interactive)
+                                        ; "Kill region if it's active and nonempty. Else delete."
+    (if (use-region-p)
+        (meow-kill))
+    (meow-delete))
 
-          (defun meow-setup ()
-            (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
-            (meow-motion-define-key
-             '("j" . meow-next)
-             '("k" . meow-prev)
-             '("~" . meow-keypad)
-             '("TAB" . kirigami-toggle-fold);unsure if embark-dwim will work on space
-             '("<escape>" . keyboard-quit))
-            (meow-leader-define-key
-             ;; Use SPC (0-9) for digit arguments.
-             '("1" . meow-digit-argument)
-             '("2" . meow-digit-argument)
-             '("3" . meow-digit-argument)
-             '("4" . meow-digit-argument)
-             '("5" . meow-digit-argument)
-             '("6" . meow-digit-argument)
-             '("7" . meow-digit-argument)
-             '("8" . meow-digit-argument)
-             '("9" . meow-digit-argument)
-             '("0" . meow-digit-argument)
-             '("/" . meow-keypad-describe-key)
-             '("?" . meow-cheatsheet))
-            (meow-normal-define-key
-             '("SPC" . kirigami-toggle-fold)
-             '("~" . meow-keypad)
-             '("0" . meow-expand-0)
-             '("9" . meow-expand-9)
-             '("8" . meow-expand-8)
-             '("7" . meow-expand-7)
-             '("6" . meow-expand-6)
-             '("5" . meow-expand-5)
-             '("4" . meow-expand-4)
-             '("3" . meow-expand-3)
-             '("2" . meow-expand-2)
-             '("1" . meow-expand-1)
-             '("-" . negative-argument)
-             ;'(";" . meow-reverse)
-             '("," . meow-inner-of-thing)
-             '("." . meow-bounds-of-thing)
-             '("[" . meow-beginning-of-thing)
-             '("]" . meow-end-of-thing)
-             '("a" . meow-append)
-             ;'("A" . meow-open-below)
-             '("b" . meow-back-word)
-             '("B" . meow-back-symbol)
-             '("c" . meow-change)
-             ;'("d" . meow-delete)
-             '("D" . meow-backward-delete)
-             '("e" . meow-next-word)
-             '("E" . meow-next-symbol)
-             '("f" . meow-find)
-             '(";" . meow-cancel-selection)
-             ;'("G" . meow-grab)
-             '("h" . meow-left)
-             '("H" . meow-left-expand)
-             '("i" . meow-insert)
-             ;'("I" . meow-open-above)
-             '("j" . meow-next)
-             '("J" . meow-next-expand)
-             '("k" . meow-prev)
-             '("K" . meow-prev-expand)
-             '("l" . meow-right)
-             '("L" . meow-right-expand)
-             '("m" . meow-join)
-             '("n" . meow-search)
-             '("p" . meow-yank)
-             '("q" . meow-quit)
-             ;'("o" . meow-block)
-             ;'("O" . meow-to-block)
-             '("Q" . meow-goto-line)
-             '("r" . meow-replace)
-             '("R" . meow-swap-grab)
-             ;'("s" . meow-kill)
-             '("t" . meow-till)
-             ;'("u" . meow-undo)
-             ;'("U" . meow-undo-in-selection)
-             ;'("v" . meow-visit)
-             '("w" . meow-mark-word)
-             '("W" . meow-mark-symbol)
-             '("x" . meow-line)
-             '("X" . meow-goto-line)
-             '("y" . meow-save)
-             '("Y" . meow-sync-grab)
-             '("z" . meow-pop-selection)
-             ;'("<escape>" . ignore)
-             '("'" . repeat)
-             ;; Custom bindings
-             '("u" . undo-fu-only-undo)
-             '("U" . undo-fu-only-redo)
-             '("s" . meow-visit)
-             '("d" . my-delete-cmd)
-             '("M-;" . meow-reverse)
-             '("g" . meow-grab)
-             '("o" . meow-open-below)
-             '("O" . meow-open-above)
-             '("I" . meow-block)
-             '("A" . meow-to-block)
-             '("/" . consult-line)
-             '("?" . consult-ripgrep)
-             '("TAB" . kirigami-toggle-fold)
-             '("v" . set-mark-command)
-             '("<escape>" . keyboard-quit))
+  (defun meow-setup ()
+    (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+    (meow-motion-define-key
+     '("j" . meow-next)
+     '("k" . meow-prev)
+     '("~" . meow-keypad)
+     '("TAB" . kirigami-toggle-fold)
+     '("S-TAB" . kirigami-toggle-fold)
+     '("<escape>" . keyboard-quit))
+    (meow-leader-define-key
+     ;; Use SPC (0-9) for digit arguments.
+     '("1" . meow-digit-argument)
+     '("2" . meow-digit-argument)
+     '("3" . meow-digit-argument)
+     '("4" . meow-digit-argument)
+     '("5" . meow-digit-argument)
+     '("6" . meow-digit-argument)
+     '("7" . meow-digit-argument)
+     '("8" . meow-digit-argument)
+     '("9" . meow-digit-argument)
+     '("0" . meow-digit-argument)
+     '("/" . meow-keypad-describe-key)
+     '("?" . meow-cheatsheet))
+    (meow-normal-define-key
+     '("SPC" . kirigami-toggle-fold)
+     '("~" . meow-keypad)
+     '("0" . meow-expand-0)
+     '("9" . meow-expand-9)
+     '("8" . meow-expand-8)
+     '("7" . meow-expand-7)
+     '("6" . meow-expand-6)
+     '("5" . meow-expand-5)
+     '("4" . meow-expand-4)
+     '("3" . meow-expand-3)
+     '("2" . meow-expand-2)
+     '("1" . meow-expand-1)
+     '("-" . negative-argument)
+                                        ;'(";" . meow-reverse)
+     '("," . meow-inner-of-thing)
+     '("." . meow-bounds-of-thing)
+     '("[" . meow-beginning-of-thing)
+     '("]" . meow-end-of-thing)
+     '("a" . meow-append)
+                                        ;'("A" . meow-open-below)
+     '("b" . meow-back-word)
+     '("B" . meow-back-symbol)
+     '("c" . meow-change)
+                                        ;'("d" . meow-delete)
+     '("D" . meow-backward-delete)
+     '("e" . meow-next-word)
+     '("E" . meow-next-symbol)
+     '("f" . meow-find)
+     '(";" . meow-cancel-selection)
+                                        ;'("G" . meow-grab)
+     '("h" . meow-left)
+     '("H" . meow-left-expand)
+     '("i" . meow-insert)
+                                        ;'("I" . meow-open-above)
+     '("j" . meow-next)
+     '("J" . meow-next-expand)
+     '("k" . meow-prev)
+     '("K" . meow-prev-expand)
+     '("l" . meow-right)
+     '("L" . meow-right-expand)
+     '("m" . meow-join)
+     '("n" . meow-search)
+     '("p" . meow-yank)
+     '("q" . meow-quit)
+                                        ;'("o" . meow-block)
+                                        ;'("O" . meow-to-block)
+     '("Q" . meow-goto-line)
+     '("r" . meow-replace)
+     '("R" . meow-swap-grab)
+                                        ;'("s" . meow-kill)
+     '("t" . meow-till)
+                                        ;'("u" . meow-undo)
+                                        ;'("U" . meow-undo-in-selection)
+                                        ;'("v" . meow-visit)
+     '("w" . meow-mark-word)
+     '("W" . meow-mark-symbol)
+     '("x" . meow-line)
+     '("X" . meow-goto-line)
+     '("y" . meow-save)
+     '("Y" . meow-sync-grab)
+     '("z" . meow-pop-selection)
+                                        ;'("<escape>" . ignore)
+     '("'" . repeat)
+     ;; Custom bindings
+     '("u" . undo-fu-only-undo)
+     '("U" . undo-fu-only-redo)
+     '("s" . meow-visit)
+     '("d" . my-delete-cmd)
+     '("M-;" . meow-reverse)
+     '("g" . meow-grab)
+     '("o" . meow-open-below)
+     '("O" . meow-open-above)
+     '("I" . meow-block)
+     '("A" . meow-to-block)
+     '("/" . consult-line)
+     '("?" . consult-ripgrep)
+     '("TAB" . kirigami-toggle-fold)
+     '("v" . set-mark-command)
+     '("<escape>" . keyboard-quit)
+     '("SPC" . embark-act)
+     '("S-SPC" . embark-dwim)))
 
-            ;; Remap beacon mode bindings
-            (add-hook 'meow-beacon-mode-hook #'(lambda ()
-              (if meow-beacon-mode
-              (progn
-                (meow-normal-define-key
-                  '("I" . meow-beacon-insert)
-                  '("A" . meow-beacon-append)
-                  '("R" . meow-beacon-replace)
-                  '("C" . meow-beacon-change)))
-              (progn
-                (meow-normal-define-key
-                  '("I" . meow-block)
-                  '("A" . meow-to-block)
-                  '("R" . meow-replace)
-                  '("C" . meow-change))))))
-            (meow-setup)
-            (meow-global-mode 1))
+    ;; Remap beacon mode bindings
+    (add-hook 'meow-beacon-mode-hook #'(lambda ()
+                                         (if meow-beacon-mode
+                                             (progn
+                                               (meow-normal-define-key
+                                                '("I" . meow-beacon-insert)
+                                                '("A" . meow-beacon-append)
+                                                '("R" . meow-beacon-replace)
+                                                '("C" . meow-beacon-change)))
+                                           (progn
+                                             (meow-normal-define-key
+                                              '("I" . meow-block)
+                                              '("A" . meow-to-block)
+                                              '("R" . meow-replace)
+                                              '("C" . meow-change))))))
+    (meow-setup)
+    (meow-global-mode ))
 #+END_SRC
 
 *** Enable mouse
@@ -1224,7 +1227,7 @@ The colors were weird in code blocks and the modeline on the light themes for me
 (use-package catppuccin-theme
   :ensure t
   :config
-  (setq catppuccin-flavor 'latte)
+  (setq catppuccin-flavor 'macchiato)
   (load-theme 'catppuccin :no-confirm))
 #+END_SRC
 Light to dark: 🌻 Latte 🪴 Frappé 🌺 Macchiato 🌿 Mocha
