@@ -1054,7 +1054,7 @@ I've been missing the gutter diff from helix
 
 
 * Major modes
-** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-markdown-mode-eg-readmemd-syntax][Markdown Additions]]
+** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-markdown-mode-eg-readmemd-syntax][Markdown (addendum)]]
 #+BEGIN_SRC emacs-lisp :tangle markdown.el
   ;; Automatically generate a table of contents when editing Markdown files
   (use-package markdown-toc
@@ -1084,6 +1084,24 @@ I've been missing the gutter diff from helix
 #+BEGIN_SRC emacs-lisp
   (setq lsp-bridge-python-lsp-server "ty")
   (setq lsp-bridge-python-multi-lsp-server "ty_ruff"))
+
+** Nix
+#+BEGIN_SRC emacs-lisp :tangle nix.el
+(use-package nix-ts-mode
+ :ensure t
+ :mode "\\.nix\\'"
+ :config
+ (setq treesit-font-lock-level 4))
+
+;; Bind nix-update-fetch to a key (C-. u), and then you can very easily
+;; update the rev/sha of a fetchgit declaration. Also works for several other fetchers.
+(use-package nix-update :ensure t)
+
+;; transparent agenix secrets editing. Open your agenix secret as any
+;; other file, make changes and save, it’ll be automatically encrypted back
+(use-package agenix :ensure t)
+ #+END_SRC
+
 ** Hledger
 #+BEGIN_SRC emacs-lisp :tangle hledger.el
 (use-package hledger-mode :ensure t)
