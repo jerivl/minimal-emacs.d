@@ -873,12 +873,12 @@ I'm also ok with using LLMs for front end web development as the standard for pe
 (use-package kirigami
   :ensure t
   :config
-  (global-set-key (kbd "C-c z o") 'kirigami-open-fold)     ; Open fold at point
-  (global-set-key (kbd "C-c z O") 'kirigami-open-fold-rec) ; Open fold recursively
-  (global-set-key (kbd "C-c z r") 'kirigami-open-folds)    ; Open all folds
-  (global-set-key (kbd "C-c z c") 'kirigami-close-fold)    ; Close fold at point
-  (global-set-key (kbd "C-c z m") 'kirigami-close-folds)   ; Close all folds
-  (global-set-key (kbd "C-c z TAB") 'kirigami-toggle-fold) ; Toggle fold at point
+  (global-set-key (kbd "C-c o TAB") 'kirigami-open-fold)     ; Open fold at point
+  (global-set-key (kbd "C-c p TAB") 'kirigami-open-fold-rec) ; Open fold recursively
+  (global-set-key (kbd "C-c O TAB") 'kirigami-open-folds)    ; Open all folds
+  (global-set-key (kbd "C-c c TAB") 'kirigami-close-fold)    ; Close fold at point
+  (global-set-key (kbd "C-c C TAB") 'kirigami-close-folds)   ; Close all folds
+  (global-set-key (kbd "C-c TAB") 'kirigami-toggle-fold) ; Toggle fold at point
 )
 #+END_SRC
 
