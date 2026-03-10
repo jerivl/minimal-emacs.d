@@ -452,7 +452,7 @@ This becomes a trivial install with nix handling dependencies, especially since 
   :ensure nil
   :config
   (global-lsp-bridge-mode)
-  <<lsp-bridge-python>>
+  <<python:lsp-bridge>>
 )
 #+END_SRC
 
@@ -957,6 +957,20 @@ I'm also ok with using LLMs for front end web development as the standard for pe
 #+END_SRC
 *** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#enhancing-the-elisp-development-experience][Enhancing the Elisp development experience]]
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
+;; Language agnostic indentation control
+(use-package indent-control
+  :ensure t
+  :config
+  (setq indent-control-records
+  '((c-mode                . 4)
+    (c++-mode              . 4)
+    (csharp-mode           . 4)
+    (sql-mode              . 1)
+    <<python:indent-control>>
+    (web-mode              . 2)
+    (yaml-mode             . 2)))
+)
+
 ;; Enables automatic indentation of code while typing
 (use-package aggressive-indent
   :ensure t
@@ -1125,11 +1139,17 @@ I've been missing the gutter diff from helix
 #+END_SRC
 
 #+CAPTION: LSP bridge settings for python
-#+TITLE: lsp-bridge-python
+#+TITLE: python:lsp-bridge
 #+BEGIN_SRC emacs-lisp
   (setq lsp-bridge-python-lsp-server "ty")
   (setq lsp-bridge-python-multi-lsp-server "ty_ruff"))
+#+END_SRC
 
+#+CAPTION: Indentation control for python
+#+TITLE: python:indentation-control
+#+BEGIN_SRC emacs-lisp
+(python-mode           . 4)
+#+END_SRC
 ** Nix
 #+BEGIN_SRC emacs-lisp :tangle nix.el
 (use-package nix-ts-mode
