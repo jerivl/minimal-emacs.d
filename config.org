@@ -265,6 +265,9 @@ To adopt standardized code styles in the wild
   ;; saved file, the cursor remains in the same position, ensuring a consistent
   ;; editing experience without affecting cursor placement.
   (stripspace-restore-column t))
+
+;; Just to make sure sometimes
+(use-package show-eol :ensure t)
 #+END_SRC
 **** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#asynchronous-code-formatting-without-cursor-disruption][Apheleia: aync code formatting]]
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
@@ -284,9 +287,9 @@ To adopt standardized code styles in the wild
   :init (global-flycheck-mode))
 #+END_SRC
 *** Completion
-**** TODO: eglot + lsp-booster
+**** DONE: eglot + lsp-booster
 like the rest of emacs, is constrained to a single thread, but the lsp-booster plugin (and the corresponding eglot-booster plugin) calls external code to open up multithreading. This was difficult to set up dependencies on MacOS but it should be fine if I call the nixpkgs version with devenv.
-**** TODO: yasnippet
+**** DONE: yasnippet
 I'm a little unsure what to do about yasnippet at the moment in light of directory based config. I do want these to be shared, but declaring them all here feels cumbersome, and it would be kind of nice if some of them were to mutate depending on my project.
 **** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-lsp-servers-with-eglot-built-in][eglot]]
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
