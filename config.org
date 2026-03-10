@@ -231,6 +231,12 @@ If the new path's directories does not exist, create them."
 #+END_SRC
 ** Code correction/augmentation
 *** Linting
+**** EditorConfig
+To adopt standardized code styles in the wild
+#+BEGIN_SRC emacs-lisp :tangle post-init.el
+(editorconfig-mode 1)
+#+END_SRC
+
 **** [[https://github.com/jAMESCHERTI/minimal-emacs.d?tab=readme-ov-file#automatic-removal-of-trailing-whitespace-on-save][Strip trailing whitespace]]
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
 ;; The stripspace Emacs package provides stripspace-local-mode, a minor mode
