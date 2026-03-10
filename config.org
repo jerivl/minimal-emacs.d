@@ -1165,7 +1165,6 @@ I've been missing the gutter diff from helix
 
 #+END_SRC
 
-
 * Major modes
 ** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-markdown-mode-eg-readmemd-syntax][Markdown (addendum)]]
 #+BEGIN_SRC emacs-lisp :tangle markdown.el
@@ -1220,7 +1219,17 @@ I've been missing the gutter diff from helix
 ;; other file, make changes and save, it’ll be automatically encrypted back
 (use-package agenix :ensure t)
  #+END_SRC
+** Terraform/OpenTofu
+#+BEGIN_SRC emacs-lisp :tangle terraform.el
+(use-package terraform-mode
+  :ensure t
+  :custom (terraform-indent-level 4)
+  :config
+  (defun my-terraform-mode-init ()
+    (outline-minor-mode 1))
 
+  (add-hook 'terraform-mode-hook 'my-terraform-mode-init))
+#+END_SRC
 ** Flashcards
 *** TODO Anki ankiPlugins.ankiConnect and curl are required
 #+BEGIN_SRC emacs-lisp :tangle anki.el
