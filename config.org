@@ -366,11 +366,11 @@ On emacs <31, popup is needed for TTY autocomplete on point. Last I checked it s
   :bind (:map corfu-map
               ("RET" . nil)
               ;("M-SPC" . corfu-insert-separator)
-              ("M-TAB" . corfu-next)
+              ("TAB" . corfu-next)      ;unsure whether this will have priority over meow
               ;([tab] . corfu-next)
               ("S-TAB" . corfu-prev)
               ;([backtab] . corfu-prev)
-              ("TAB" . corfu-insert))
+              ("RET" . corfu-insert))
   :init
   (global-corfu-mode)
   (corfu-history-mode)
@@ -616,8 +616,8 @@ I'm also ok with using LLMs for front end web development as the standard for pe
              embark-bindings
              embark-prefix-help-command)
   :bind
-  (("C-." . embark-act)         ;; pick some comfortable binding
-   ("C-;" . embark-dwim)        ;; good alternative: M-.
+  (("SPC" . embark-act)         ;; pick some comfortable binding
+   ("M-SPC" . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
   :init
@@ -749,9 +749,9 @@ I'm also ok with using LLMs for front end web development as the standard for pe
             (meow-motion-define-key
              '("j" . meow-next)
              '("k" . meow-prev)
-             '("<escape>" . ignore)
              '("~" . meow-keypad)
-             '("SPC" . kirigami-toggle-fold))
+             '("TAB" . kirigami-toggle-fold);unsure if embark-dwim will work on space
+             '("<escape>" . keyboard-quit))
             (meow-leader-define-key
              ;; Use SPC (0-9) for digit arguments.
              '("1" . meow-digit-argument)
@@ -828,7 +828,7 @@ I'm also ok with using LLMs for front end web development as the standard for pe
              '("y" . meow-save)
              '("Y" . meow-sync-grab)
              '("z" . meow-pop-selection)
-             '("<escape>" . ignore)
+             ;'("<escape>" . ignore)
              '("'" . repeat)
              ;; Custom bindings
              '("u" . undo-fu-only-undo)
@@ -842,7 +842,10 @@ I'm also ok with using LLMs for front end web development as the standard for pe
              '("I" . meow-block)
              '("A" . meow-to-block)
              '("/" . consult-line)
-             '("?" . consult-ripgrep)))
+             '("?" . consult-ripgrep)
+             '("TAB" . kirigami-toggle-fold)
+             '("v" . set-mark-command)
+             '("<escape>" . keyboard-quit))
 
             ;; Remap beacon mode bindings
             (add-hook 'meow-beacon-mode-hook #'(lambda ()
