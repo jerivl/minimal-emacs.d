@@ -318,8 +318,49 @@ I'm a little unsure what to do about yasnippet at the moment in light of directo
 (global-treesit-auto-mode))
 
 #+END_SRC
-**** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#efficient-template-expansion-with-snippets][yasnippet]]
+**** tempel
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
+;; Configure Tempel
+(use-package tempel
+  :ensure t
+  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
+         ("M-*" . tempel-insert))
+
+  :init
+
+  ;; Setup completion at point
+  (defun tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.  `tempel-expand'
+    ;; only triggers on exact matches. We add `tempel-expand' *before* the main
+    ;; programming mode Capf, such that it will be tried first.
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand completion-at-point-functions))
+
+    ;; Alternatively use `tempel-complete' if you want to see all matches.  Use
+    ;; a trigger prefix character in order to prevent Tempel from triggering
+    ;; unexpectly.
+    ;; (setq-local corfu-auto-trigger "/"
+    ;;             completion-at-point-functions
+    ;;             (cons (cape-capf-trigger #'tempel-complete ?/)
+    ;;                   completion-at-point-functions))
+  )
+
+  (add-hook 'conf-mode-hook 'tempel-setup-capf)
+  (add-hook 'prog-mode-hook 'tempel-setup-capf)
+  (add-hook 'text-mode-hook 'tempel-setup-capf)
+
+  ;; Optionally make the Tempel templates available to Abbrev,
+  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
+  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+  ;; (global-tempel-abbrev-mode)
+)
+
+;; Optional: Add tempel-collection if you want ready-made templates.
+(use-package tempel-collection :ensure t)
+
+#+END_SRC
+**** [[https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#efficient-template-expansion-with-snippets][yasnippet]]
+#+BEGIN_SRC emacs-lisp
 ;; YASnippet is a template system designed that enhances text editing by
 ;; enabling users to define and use snippets. When a user types a short
 ;; abbreviation, YASnippet automatically expands it into a full template, which
@@ -575,7 +616,8 @@ I'm also ok with using LLMs for front end web development as the standard for pe
      mark-ring global-mark-ring       ; marks
      search-ring regexp-search-ring)))
 #+END_SRC
-**** [[Https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-vertico-consult-and-embark][Vertico, Consult, Embark]]
+**** TODO : [[Https://github.com/jamescherti/minimal-emacs.d?tab=readme-ov-file#configuring-vertico-consult-and-embark][Vertico, Consult, Embark]]: try GH:jojojames/fussy instead of orderless
+
 #+BEGIN_SRC emacs-lisp :tangle post-init.el
 ;; Vertico provides a vertical completion interface, making it easier to
 ;; navigate and select from completion candidates (e.g., when `M-x` is pressed).
