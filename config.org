@@ -7,6 +7,7 @@ Upstream suggested configurations are used heavily. Source is linked if availabl
 
 The main branch is intended to be a stable branch for me to apply to new projects, stable meaning that early-init.el and init.el are generated from from upstream, see sed.yml. I try to track upstream as close as possible on the update branch, but for now I see the most elegant solution is manually editing the sed commands to filter out problematic lines.
 
+Dev is what I pull to local, while any changes made there get made into a PR into update.s
 * Base config
 This section corresponds to any configuration that will be applied accross all emacs instances, regardless of the answer to the copier questions
 ** Runtime-Internals
