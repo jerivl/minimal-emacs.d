@@ -36,16 +36,14 @@
 ;;; package.el
 
 (when (and (bound-and-true-p minimal-emacs-package-initialize-and-refresh)
-           (not (bound-and-true-p byte-compile-current-file))
-           (not (or (fboundp 'straight-use-package)
-                    (fboundp 'elpaca))))
+           (not (bound-and-true-p byte-compile-current-file)))
   ;; Initialize and refresh package contents again if needed
   (package-initialize)
-  (when (version< emacs-version "29.1")
-    (unless (package-installed-p 'use-package)
-      (unless package-archive-contents
-        (package-refresh-contents))
-      (package-install 'use-package)))
+  (unless package-archive-contents
+    (package-refresh-contents))
+  (when (and (version< emacs-version "29.1")
+             (not (package-installed-p 'use-package)))
+    (package-install 'use-package))
   (require 'use-package))
 
 ;;; Minibuffer
@@ -106,7 +104,7 @@
 
 (setq whitespace-line-column nil)  ; Use the value of `fill-column'.
 
-;; Disable truncation of printed s-expressions in the message buffer
+;; Disable ellipsis when printing s-expressions in the message buffer
 (setq eval-expression-print-length nil
       eval-expression-print-level nil)
 
@@ -135,7 +133,6 @@
 ;;; Tramp
 
 (setq tramp-verbose 1)
-(setq tramp-completion-reread-directory-timeout 50)
 
 ;;; Files
 
@@ -146,8 +143,10 @@
 ;; Ignoring this is acceptable since it will redirect to the buffer regardless.
 (setq find-file-suppress-same-file-warnings t)
 
-;; Resolve symlinks so that operations are conducted from the file's directory
+;; Resolve symlinks to avoid duplicate buffers
 (setq find-file-visit-truename t
+      ;; Automatically follow a symlink to its source if that source is managed
+      ;; by a version control system, rather than asking for permission.
       vc-follow-symlinks t)
 
 ;; Prefer vertical splits over horizontal ones
@@ -171,8 +170,16 @@
 
 ;;; Backup files
 
-;; Avoid backups or lockfiles to prevent creating world-readable copies of files
+;; Disable the creation of lockfiles (e.g., .#filename).
+;; Modern workflows rely on `global-auto-revert-mode' to handle external file
+;; changes gracefully, making the restrictive nature of lockfiles unnecessary.
 (setq create-lockfiles nil)
+
+;; Disable backup files (e.g., filename~). Note that `auto-save-default'
+;; remains enabled by default. Even with `make-backup-files' backups disabled,
+;; Emacs will still generate temporary recovery files (e.g., #filename#) for
+;; unsaved buffers. This protects your active work from sudden crashes while
+;; ensuring the file system is cleaned up immediately upon a successful save.
 (setq make-backup-files nil)
 
 (setq backup-directory-alist
@@ -188,7 +195,6 @@
 ;;; VC
 
 (setq vc-git-print-log-follow t)
-(setq vc-make-backup-files nil)  ; Do not backup version controlled files
 (setq vc-git-diff-switches '("--histogram"))  ; Faster algorithm for diffing.
 
 ;;; Auto save
@@ -196,8 +202,12 @@
 ;; Enable auto-save to safeguard against crashes or data loss. The
 ;; `recover-file' or `recover-session' functions can be used to restore
 ;; auto-saved data.
-(setq auto-save-default nil)
 (setq auto-save-no-message t)
+
+(when noninteractive
+  ;; The command line interface
+  (setq enable-dir-local-variables nil)
+  (setq case-fold-search nil))
 
 ;; Do not auto-disable auto-save after deleting large chunks of
 ;; text.
@@ -208,6 +218,20 @@
 (setq tramp-auto-save-directory
       (expand-file-name "tramp-autosave/" user-emacs-directory))
 
+(setq auto-save-file-name-transforms
+      `(("\\`/[^/]*:\\([^/]*/\\)*\\([^/]*\\)\\'"
+         ,(file-name-concat auto-save-list-file-prefix "tramp-\\2-") sha1)
+        ("\\`/\\([^/]+/\\)*\\([^/]+\\)\\'"
+         ,(file-name-concat auto-save-list-file-prefix "\\2-") sha1)))
+
+;; Ensure the directory for auto-save session logs exists with restricted
+;; permissions.
+(when auto-save-default
+  (let ((auto-save-dir (file-name-directory auto-save-list-file-prefix)))
+    (unless (file-exists-p auto-save-dir)
+      (with-file-modes #o700
+        (make-directory auto-save-dir t)))))
+
 ;; Auto save options
 (setq kill-buffer-delete-auto-save-files t)
 
@@ -217,9 +241,6 @@
 ;;; Auto revert
 ;; Auto-revert in Emacs is a feature that automatically updates the contents of
 ;; a buffer to reflect changes made to the underlying file.
-(setq revert-without-query (list ".")  ; Do not prompt
-      auto-revert-stop-on-user-input nil
-      auto-revert-verbose t)
 
 ;; Revert other buffers (e.g, Dired)
 (setq global-auto-revert-non-file-buffers t)
@@ -231,7 +252,6 @@
 (setq recentf-max-saved-items 300) ; default is 20
 (setq recentf-max-menu-items 15)
 (setq recentf-auto-cleanup 'mode)
-(setq recentf-exclude nil)
 
 ;;; saveplace
 
@@ -244,17 +264,12 @@
 ;; `savehist-mode' is an Emacs feature that preserves the minibuffer history
 ;; between sessions.
 (setq history-length 300)
-(setq savehist-save-minibuffer-history t)  ;; Default
 (setq savehist-additional-variables
       '(register-alist                   ; macros
         mark-ring global-mark-ring       ; marks
         search-ring regexp-search-ring)) ; searches
 
 ;;; Frames and windows
-
-;; However, do not resize windows pixelwise, as this can cause crashes in some
-;; cases when resizing too many windows at once or rapidly.
-(setq window-resize-pixelwise nil)
 
 (setq resize-mini-windows 'grow-only)
 
@@ -285,19 +300,9 @@
 ;; 2. Resolving the issue of random half-screen jumps during scrolling.
 (setq auto-window-vscroll nil)
 
-;; Number of lines of margin at the top and bottom of a window.
-(setq scroll-margin 0)
-
-;; Number of lines of continuity when scrolling by screenfuls.
-(setq next-screen-context-lines 0)
-
 ;; Horizontal scrolling
 (setq hscroll-margin 2
       hscroll-step 1)
-
-;;; Mouse
-
-(setq mouse-yank-at-point nil)
 
 ;; Emacs 29
 (when (memq 'context-menu minimal-emacs-ui-features)
@@ -314,9 +319,6 @@
 ;; Don't blink the paren matching the one at point, it's too distracting.
 (setq blink-matching-paren nil)
 
-;; Do not extend the cursor to fit wide characters
-(setq x-stretch-cursor nil)
-
 ;; Reduce rendering/line scan work by not rendering cursors or regions in
 ;; non-focused windows.
 (setq highlight-nonselected-windows nil)
@@ -329,10 +331,6 @@
 ;; A longer delay can be annoying as it causes a noticeable pause after each
 ;; deletion, disrupting the flow of editing.
 (setq delete-pair-blink-delay 0.03)
-
-;; Disable visual indicators in the fringe for buffer boundaries and empty lines
-(setq-default indicate-buffer-boundaries nil)
-(setq-default indicate-empty-lines nil)
 
 ;; Continue wrapped lines at whitespace rather than breaking in the
 ;; middle of a word.
@@ -539,8 +537,8 @@
 
 ;;; Load post init
 
-(setq minimal-emacs--success t)
-
+(when (and minimal-emacs-load-post-init
+           (fboundp 'minimal-emacs-load-user-init))
 ;; Local variables:
 ;; byte-compile-warnings: (not obsolete free-vars)
 ;; End:

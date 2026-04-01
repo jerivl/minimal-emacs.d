@@ -208,6 +208,13 @@ in
     fi
   '';
 
+  scripts.acs.exec = ''
+    aicommit2 -asiy --output json | jq -r '.subject + "\n\n" + .body'
+  '';
+  
+  scripts."jj describe".exec = ''
+    jj describe -m "$(aicommit2 -asiy --output json | jq -r '.subject + "\n\n" + .body')" --editor
+  '';
   enterShell = ''
     first-setup-check
     hello
