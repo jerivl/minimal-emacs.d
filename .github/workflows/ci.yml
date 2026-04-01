@@ -17,6 +17,8 @@
 name: CI
 on:
   push:
+    branches:
+      - update
     paths:
       - '**.el'
   pull_request:
