@@ -91,7 +91,9 @@ Note that this should end with a directory separator.")
       (error "Emacs ignored loading 'init.el'. Please ensure that files such as ~/.emacs or ~/.emacs.el do not exist, as they may be preventing Emacs from loading the 'init.el' file"))
 
      (t
-      (error "Configuration error. Debug by starting Emacs with: emacs --debug-init")))))
+      (error "Configuration error. Debug by starting Emacs with: --debug-init")))))
+(unless noninteractive
+  (add-hook 'emacs-startup-hook #'minimal-emacs--check-success 102))
 
 (defvar minimal-emacs-load-compiled-init-files nil
   "If non-nil, attempt to load byte-compiled .elc for init files.
@@ -119,8 +121,8 @@ pre-early-init.el, and post-early-init.el.")
       ;; Remove the file suffix (.el, .el.gz, etc.) to let the `load' function
       ;; select between .el and .elc files.
       (setq init-file (minimal-emacs--remove-el-file-suffix init-file))
-      (load init-file :no-error (not minimal-emacs-debug)))))
-
+(when minimal-emacs-load-pre-early-init
+  (minimal-emacs-load-user-init "pre-early-init.el"))
 
 (setq custom-theme-directory
       (expand-file-name "themes/" minimal-emacs-user-directory))
@@ -138,7 +140,9 @@ pre-early-init.el, and post-early-init.el.")
 
 (defun minimal-emacs--restore-gc ()
   "Restore garbage collection settings."
-  (if (bound-and-true-p minimal-emacs-gc-cons-threshold-restore-delay)
+  (if (and (bound-and-true-p minimal-emacs-gc-cons-threshold-restore-delay)
+           ;; In noninteractive mode, the event loop does not run
+           (not noninteractive))
       ;; Defer garbage collection during initialization to avoid 2 collections.
       (run-with-timer minimal-emacs-gc-cons-threshold-restore-delay nil
                       #'minimal-emacs--restore-gc-values)
@@ -319,6 +323,9 @@ this stage of initialization."
 
 ;;; Performance: Disable mode-line during startup
 
+(defvar-local minimal-emacs--hidden-mode-line nil
+  "Store the buffer-local value of `mode-line-format' during startup.")
+
 (when (and minimal-emacs-disable-mode-line-during-startup
            (not noninteractive)
            (not minimal-emacs-debug))
@@ -327,7 +334,9 @@ this stage of initialization."
   (setq-default mode-line-format nil)
   (dolist (buf (buffer-list))
     (with-current-buffer buf
-      (setq mode-line-format nil))))
+      (when (local-variable-p 'mode-line-format)
+        (setq minimal-emacs--hidden-mode-line mode-line-format)
+        (setq mode-line-format nil)))))
 
 ;;; Restore values
 
@@ -346,7 +355,12 @@ this stage of initialization."
     (when minimal-emacs-disable-mode-line-during-startup
       (unless (default-toplevel-value 'mode-line-format)
         (setq-default mode-line-format (get 'mode-line-format
-                                            'initial-value))))))
+                                            'initial-value)))
+      (dolist (buf (buffer-list))
+        (with-current-buffer buf
+          (when (local-variable-p 'minimal-emacs--hidden-mode-line)
+            (setq mode-line-format minimal-emacs--hidden-mode-line)
+            (kill-local-variable 'minimal-emacs--hidden-mode-line)))))))
 
 (advice-add 'startup--load-user-init-file :around
             #'minimal-emacs--startup-load-user-init-file)
@@ -418,8 +432,6 @@ this stage of initialization."
 (setq use-package-enable-imenu-support t)
 
 ;; package.el
-(setq package-enable-at-startup nil)  ; Let the init.el file handle this
-(setq package-quickstart-file
       (expand-file-name "package-quickstart.el" user-emacs-directory))
 (setq package-archives '(("melpa"        . "https://melpa.org/packages/")
                          ("gnu"          . "https://elpa.gnu.org/packages/")
@@ -432,6 +444,8 @@ this stage of initialization."
 
 ;;; Load post-early-init.el
 
+(when minimal-emacs-load-post-early-init
+  (minimal-emacs-load-user-init "post-early-init.el"))
 
 ;; Local variables:
 ;; byte-compile-warnings: (not obsolete free-vars)
