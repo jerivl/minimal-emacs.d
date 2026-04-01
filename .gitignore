@@ -11,6 +11,9 @@
 .devenv/*
 .direnv/*
 
+# Lock files
+devenv.lock
+
 # But not these files...
 !.gitignore
 !config.org
