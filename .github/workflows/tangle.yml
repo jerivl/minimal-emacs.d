@@ -16,7 +16,10 @@
 
 name: Tangle, commit and push
 on:
+  workflow_dispatch:
   push:
+    branches:
+      - update
     paths:
       - 'config.org'
   pull_request:
