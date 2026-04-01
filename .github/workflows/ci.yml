@@ -1,0 +1,46 @@
+---
+#
+# This file is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# This file is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.
+#
+
+name: CI
+on:
+  push:
+    paths:
+      - '**.el'
+  pull_request:
+    paths:
+      - '**.el'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        emacs-version:
+          - 30.1
+        python-version:
+          - 3.12
+    steps:
+      # Cask
+      - uses: actions/checkout@v4
+      - uses: purcell/setup-emacs@master
+        with:
+          version: ${{ matrix.emacs-version }}
+
+      - name: Compile and check eval
+        run: |
+          echo '(setq user-emacs-directory "${GITHUB_WORKSPACE}")' | tee dir
+          cat lexical-binding dir pre-early-init.el early-init.el init.el post-init.el | tee tmp
+          emacs -batch -L . --eval '(progn (insert "Hello, World!") (write-file "output.txt"))' -f batch-byte-compile tmp
+          cat output.txt
