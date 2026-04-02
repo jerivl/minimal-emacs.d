@@ -23,6 +23,8 @@ on:
     paths:
       - 'config.org'
   pull_request:
+    branches:
+      - update
     paths:
       - 'config.org'
 jobs:
