@@ -5,9 +5,11 @@
 
 ## Introduction
 
-The **minimal-emacs.d** project is a **fast and lightweight** Emacs base (`init.el` and `early-init.el`) that **gives you full control over your configuration**. It provides better defaults, an optimized startup, and a clean foundation for building your own vanilla Emacs setup.
+The **minimal-emacs.d** project is a **fast and lightweight** minimal Emacs starter kit (`init.el` and `early-init.el`) that **gives you full control over your configuration**. It provides better defaults, an optimized startup, and a clean foundation for building your own vanilla Emacs setup.
 
-In just a few minutes of applying what's in this README.md file, you will possess a fully functional, high-performance Emacs configuration ready for work. You will bypass hours of configuration and the heavy overhead of frameworks like Doom or Spacemacs, gaining immediate access to a foundation featuring optimized garbage collection, sensible UI defaults, and a fast startup.
+Each setting in minimal-emacs.d is carefully chosen to answer this question: does it provide a better default that modernizes Emacs while keeping it lightweight, fast and stable?
+
+In just a few minutes of applying what's in this README.md file, you will have a fully functional, high-performance Emacs configuration ready for work. You will bypass hours of configuration and the heavy overhead of frameworks like Doom or Spacemacs, gaining access to optimized garbage collection, sensible defaults, and a fast startup.
 
 If this helps your workflow, please show your support by **⭐ starring minimal-emacs.d on GitHub** to help more Emacs users discover its benefits.
 
@@ -50,6 +52,7 @@ Startup speed depends on hardware and disk speed. For consistent comparisons, te
 
 ## User Testimonials
 
+- [DapperStatement3364](https://www.reddit.com/r/emacs/comments/1rsmaut/comment/ocv82id/): "Thank you!!! It helped me a lot. I was having some problems with my config (latency/input lag), was considering to going back to Neovim and your config solved my problems. Great documentation btw, everything is very clear and easy to follow."
 - [gnudoc on Reddit](https://www.reddit.com/r/emacs/comments/1feaf37/comment/lmn1hoo/): "That's a great learning resource. Thank you for your work on it and for sharing it!"
 - [dewyke on Reddit](https://www.reddit.com/r/emacs/comments/1feaf37/comment/lmq53an/): "Lots of good stuff in there, even for people who already have established ways of organising their configs."
 - [JamesBrickley (Shout out to this starter-kit: Minimal-Emacs )](https://www.reddit.com/r/emacs/comments/1epz7qn/shout_out_to_this_starterkit_minimalemacs/) appreciates that *minimal-emacs.d* provides an optimized *early-init.el* and *init.el* for fast startup times and sensible default settings. He highlights that the project includes all the essential configurations needed for a well-tuned Emacs setup, eliminating the need to sift through conflicting advice on topics like garbage collection optimization. While he has encountered similar settings before, he also discovered new optimizations he had not seen elsewhere.
@@ -67,6 +70,8 @@ Startup speed depends on hardware and disk speed. For consistent comparisons, te
 - [jeenajeena on Reddit](https://www.reddit.com/r/emacs/comments/1p9y8h4/comment/nrfk13i/): "Thank you. Plenty of inspiring settings. Worth to be read line by line."
 - [uutangohotel on Reddit](https://www.reddit.com/r/emacs/comments/1p9y8h4/comment/nrg5kja/): "I get a lot out of minimal-emacs.d — thank you! I use stow to manage my dotfiles in a git repo. I created a submodule in one dir for minimal-emacs.d and another for my “overrides”, e.g. post-init.el. Easy and works great."
 - [sunng on Reddit](https://www.reddit.com/r/emacs/comments/1p9y8h4/comment/ns1nehi/): "Nice work! I just created a nix flake to using it on my dev servers"
+- [zackattackz287 on Reddit](https://www.reddit.com/r/emacs/comments/1rsmaut/comment/oa8okca/): "Congrats and thank you (and the community around minimal.d) for your work! I've been using it for quite a while now and I've not ever had any breakages when merging changes from main..."
+- [utility on Reddit](https://www.reddit.com/r/emacs/comments/1rsmaut/comment/oa8wrap/): "Excellent. I use this and I'm very happy with it!"
 
 Please share your configuration. It could serve as inspiration for other users.
 
@@ -128,6 +133,7 @@ Please share your configuration. It could serve as inspiration for other users.
     - [Changing the Default Font](#changing-the-default-font)
     - [Persisting and Restoring Text Scale](#persisting-and-restoring-text-scale)
     - [A Faster Terminal Emulator](#a-faster-terminal-emulator)
+    - [Emacs server](#emacs-server)
     - [Loading the custom.el file](#loading-the-customel-file)
     - [Which other customizations can be interesting to add?](#which-other-customizations-can-be-interesting-to-add)
     - [File types (Yaml, Dockerfile, Lua, Jinja2, CSV, Vimrc...)](#file-types-yaml-dockerfile-lua-jinja2-csv-vimrc)
@@ -156,6 +162,14 @@ Please share your configuration. It could serve as inspiration for other users.
     - [How to make *minimal-emacs.d* install packages in the early-init phase instead of the init phase?](#how-to-make-minimal-emacsd-install-packages-in-the-early-init-phase-instead-of-the-init-phase)
     - [Minimal-emacs.d configurations from users](#minimal-emacsd-configurations-from-users)
   - [Features](#features)
+    - [Fast Initialization and Performance](#fast-initialization-and-performance)
+    - [Native Compilation and Byte Compilation](#native-compilation-and-byte-compilation)
+    - [Interface Defaults](#interface-defaults)
+    - [Package and File Management](#package-and-file-management)
+    - [Precision Editing and UX Enhancements](#precision-editing-and-ux-enhancements)
+    - [Developer Experience](#developer-experience)
+    - [Buffer, Directory, and Window Management](#buffer-directory-and-window-management)
+    - [Security, Stability, and Customizable Initialization](#security-stability-and-customizable-initialization)
   - [Author and license](#author-and-license)
   - [Links](#links)
 
@@ -215,7 +229,7 @@ Always begin your `pre-init.el`, `post-init.el`, `post-early-init.el`, and `pre-
 
 Replace `FILENAME.el` with the actual name and DESCRIPTION with a brief description of its purpose.
 
-*(Only if you know what you're doing: Removing `no-byte-compile: t;` from your init files allows Emacs to compile them, improving load and execution speed. However, if you do so, you may need to add required dependencies. For example, if you're using `use-package`, add `(require 'use-package)` at the top of `post-init.el` to ensure all necessary `use-package` variables and functions are loaded.)*
+*(Only if you know what you're doing: Removing `no-byte-compile: t;` from your init files allows Emacs to compile them, improving load and execution speed. However, if you do so, you may need to add required dependencies. For example, if you're using `use-package`, add `(require 'use-package)` at the top of `post-init.el` to ensure all necessary `use-package` variables and functions are loaded. **The only init file where `no-byte-compile: t` should never be removed is `early-init.el`**, because if this file is compiled, Emacs may load an outdated compiled version.)*
 
 **Important:** The examples in this README reference pre/post init files in the `~/.emacs.d/` directory, but the files `pre-early-init.el`, `post-early-init.el`, `pre-init.el`, and `post-init.el` should be placed in the same directory as `init.el` and `early-init.el`, regardless of their location.
 
@@ -280,7 +294,6 @@ Native compilation enhances Emacs performance by converting Elisp code into nati
 ;; Ensure adding the following compile-angel code at the very beginning
 ;; of your `~/.emacs.d/post-init.el` file, before all other packages.
 (use-package compile-angel
-  :ensure t
   :demand t
   :config
   ;; The following disables compilation of packages during installation;
@@ -324,7 +337,6 @@ To fix this, add **exec-path-from-shell** to `~/.emacs.d/post-init.el`:
 (use-package exec-path-from-shell
   :if (and (or (display-graphic-p) (daemonp))
            (eq system-type 'darwin)) ; macOS only
-  :ensure t
   :demand t
   :functions exec-path-from-shell-initialize
   :config
@@ -355,11 +367,11 @@ The recentf, savehist, saveplace, and auto-revert built-in packages are already 
   :hook
   (after-init . global-auto-revert-mode)
   :init
+  ;; (setq auto-revert-verbose t)
   (setq auto-revert-interval 3)
   (setq auto-revert-remote-files nil)
   (setq auto-revert-use-notify t)
-  (setq auto-revert-avoid-polling nil)
-  (setq auto-revert-verbose t))
+  (setq auto-revert-avoid-polling nil))
 
 ;; Recentf is an Emacs package that maintains a list of recently
 ;; accessed files, making it easier to reopen files you have worked on
@@ -425,7 +437,10 @@ To enable autosave, add the following to `~/.emacs.d/post-init.el`:
 ;; `recover-session' to restore unsaved changes.
 (setq auto-save-default t)
 
+;; Trigger an auto-save after 300 keystrokes
 (setq auto-save-interval 300)
+
+;; Trigger an auto-save 30 seconds of idle time.
 (setq auto-save-timeout 30)
 ```
 
@@ -463,7 +478,6 @@ To configure `corfu` and `cape`, add the following to `~/.emacs.d/post-init.el`:
 ;; current candidates, positioned either below or above the point. Candidates
 ;; can be selected by navigating up or down.
 (use-package corfu
-  :ensure t
   :commands (corfu-mode global-corfu-mode)
 
   :hook ((prog-mode . corfu-mode)
@@ -485,7 +499,6 @@ To configure `corfu` and `cape`, add the following to `~/.emacs.d/post-init.el`:
 ;; in-buffer completion. It integrates with Corfu or the default completion UI,
 ;; by providing additional backends through completion-at-point-functions.
 (use-package cape
-  :ensure t
   :commands (cape-dabbrev cape-file cape-elisp-block)
   :bind ("C-c p" . cape-prefix-map)
   :init
@@ -514,7 +527,6 @@ Add the following to `~/.emacs.d/post-init.el` to set up Vertico, Consult, and E
 ;; navigate and select from completion candidates (e.g., when `M-x` is pressed).
 (use-package vertico
   ;; (Note: It is recommended to also enable the savehist package.)
-  :ensure t
   :config
   (vertico-mode))
 
@@ -522,7 +534,6 @@ Add the following to `~/.emacs.d/post-init.el` to set up Vertico, Consult, and E
 ;; to input multiple patterns separated by spaces, which Orderless then
 ;; matches in any order against the candidates.
 (use-package orderless
-  :ensure t
   :custom
   (completion-styles '(orderless basic))
   (completion-category-defaults nil)
@@ -532,7 +543,6 @@ Add the following to `~/.emacs.d/post-init.el` to set up Vertico, Consult, and E
 ;; In addition to that, Marginalia also enhances Vertico by adding rich
 ;; annotations to the completion candidates displayed in Vertico's interface.
 (use-package marginalia
-  :ensure t
   :commands (marginalia-mode marginalia-cycle)
   :hook (after-init . marginalia-mode))
 
@@ -544,7 +554,6 @@ Add the following to `~/.emacs.d/post-init.el` to set up Vertico, Consult, and E
   ;; Embark is an Emacs package that acts like a context menu, allowing
   ;; users to perform context-sensitive actions on selected items
   ;; directly from the completion interface.
-  :ensure t
   :commands (embark-act
              embark-dwim
              embark-export
@@ -567,14 +576,12 @@ Add the following to `~/.emacs.d/post-init.el` to set up Vertico, Consult, and E
                  (window-parameters (mode-line-format . none)))))
 
 (use-package embark-consult
-  :ensure t
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
 ;; Consult offers a suite of commands for efficient searching, previewing, and
 ;; interacting with buffers, file contents, and more, improving various tasks.
 (use-package consult
-  :ensure t
   :bind (;; C-c bindings in `mode-specific-map'
          ("C-c M-x" . consult-mode-command)
          ("C-c h" . consult-history)
@@ -680,7 +687,6 @@ To install and configure these packages, add the following to `~/.emacs.d/post-i
 ;; The undo-fu package is a lightweight wrapper around Emacs' built-in undo
 ;; system, providing more convenient undo/redo functionality.
 (use-package undo-fu
-  :ensure t
   :commands (undo-fu-only-undo
              undo-fu-only-redo
              undo-fu-only-redo-all
@@ -693,7 +699,6 @@ To install and configure these packages, add the following to `~/.emacs.d/post-i
 ;; The undo-fu-session package complements undo-fu by enabling the saving
 ;; and restoration of undo history across Emacs sessions, even after restarting.
 (use-package undo-fu-session
-  :ensure t
   :commands undo-fu-session-global-mode
   :hook (after-init . undo-fu-session-global-mode))
 ```
@@ -755,7 +760,6 @@ Configuring Vim keybindings in Emacs can greatly enhance your editing efficiency
 
 ;; Vim emulation
 (use-package evil
-  :ensure t
   :commands (evil-mode evil-define-key)
   :hook (after-init . evil-mode)
 
@@ -796,7 +800,6 @@ Configuring Vim keybindings in Emacs can greatly enhance your editing efficiency
 
 (use-package evil-collection
   :after evil
-  :ensure t
   :init
   ;; It has to be defined before evil-colllection
   (setq evil-collection-setup-minibuffer t)
@@ -817,7 +820,6 @@ You can also install the [vim-tab-bar](https://github.com/jamescherti/vim-tab-ba
 ``` emacs-lisp
 ;; Give Emacs tab-bar a style similar to Vim's
 (use-package vim-tab-bar
-  :ensure t
   :commands vim-tab-bar-mode
   :hook (after-init . vim-tab-bar-mode))
 ```
@@ -835,7 +837,6 @@ The `evil-surround` package simplifies handling surrounding characters, such as 
 ;; using S" or gS".
 (use-package evil-surround
   :after evil
-  :ensure t
   :commands global-evil-surround-mode
   :custom
   (evil-surround-pairs-alist
@@ -881,7 +882,6 @@ To configure **easysession**, add the following to `~/.emacs.d/post-init.el`:
 ;; manage Emacs editing sessions and utilizes built-in Emacs functions to
 ;; persist and restore frames.
 (use-package easysession
-  :ensure t
   :commands (easysession-switch-to
              easysession-save-as
              easysession-save-mode
@@ -946,7 +946,6 @@ This configuration sets up `markdown-mode` with deferred loading to improve star
 ```elisp
 ;; Automatically generate a table of contents when editing Markdown files
 (use-package markdown-toc
-  :ensure t
   :commands (markdown-toc-generate-toc
              markdown-toc-generate-or-refresh-toc
              markdown-toc-delete-toc
@@ -1062,7 +1061,6 @@ For folding based on indentation levels, the **[outline-indent](https://github.c
 ;; - Move backward/forward to the indentation level of the current line
 ;; - and other features.
 (use-package outline-indent
-  :ensure t
   :commands outline-indent-minor-mode
 
   :custom
@@ -1131,7 +1129,6 @@ To configure **apheleia**, add the following to `~/.emacs.d/post-init.el`:
 ;; Apheleia is an Emacs package designed to run code formatters (e.g., Shfmt,
 ;; Black and Prettier) asynchronously without disrupting the cursor position.
 (use-package apheleia
-  :ensure t
   :commands (apheleia-mode
              apheleia-global-mode)
   :hook ((prog-mode . apheleia-mode)))
@@ -1186,7 +1183,6 @@ The [yasnippet-snippets](https://github.com/AndreaCrotti/yasnippet-snippets) pac
 ```elisp
 ;; The official collection of snippets for yasnippet.
 (use-package yasnippet-snippets
-  :ensure t
   :after yasnippet)
 
 ;; YASnippet is a template system designed that enhances text editing by
@@ -1194,7 +1190,6 @@ The [yasnippet-snippets](https://github.com/AndreaCrotti/yasnippet-snippets) pac
 ;; abbreviation, YASnippet automatically expands it into a full template, which
 ;; can include placeholders, fields, and dynamic content.
 (use-package yasnippet
-  :ensure t
   :commands (yas-minor-mode
              yas-global-mode)
 
@@ -1294,7 +1289,6 @@ To enable **stripspace** and automatically delete trailing whitespace, add the f
 ;; that automatically removes trailing whitespace and blank lines at the end of
 ;; the buffer when saving.
 (use-package stripspace
-  :ensure t
   :commands stripspace-local-mode
 
   ;; Enable for prog-mode-hook, text-mode-hook, conf-mode-hook
@@ -1349,7 +1343,6 @@ To configure **org-mode**, add the following to `~/.emacs.d/post-init.el`:
 ;; scheduling, deadlines, time tracking, and exporting to multiple formats
 ;; including HTML, LaTeX, PDF, and Markdown.
 (use-package org
-  :ensure t
   :commands (org-mode org-version)
   :mode
   ("\\.org\\'" . org-mode)
@@ -1419,7 +1412,6 @@ To configure **auto-package-update**, add the following to `~/.emacs.d/post-init
 ```elisp
 ;; This automates the process of updating installed packages
 (use-package auto-package-update
-  :ensure t
   :custom
   ;; Set the number of days between automatic updates.
   ;; Here, packages will only be updated if at least 7 days have passed
@@ -1464,7 +1456,6 @@ To configure **buffer-terminator**, add the following to `~/.emacs.d/post-init.e
 
 ```emacs-lisp
 (use-package buffer-terminator
-  :ensure t
   :custom
   ;; Enable/Disable verbose mode to log buffer cleanup events
   (buffer-terminator-verbose nil)
@@ -1496,7 +1487,6 @@ To configure **treemacs**, add the following to `~/.emacs.d/post-init.el`:
 ;; in the left window, providing a persistent view of files, projects, and
 ;; other elements.
 (use-package treemacs
-  :ensure t
   :commands (treemacs
              treemacs-select-window
              treemacs-delete-other-windows
@@ -1596,15 +1586,12 @@ To configure **treemacs**, add the following to `~/.emacs.d/post-init.el`:
 
 ;; (use-package treemacs-evil
 ;;   :after (treemacs evil)
-;;   :ensure t)
 ;;
 ;; (use-package treemacs-icons-dired
 ;;   :hook (dired-mode . treemacs-icons-dired-enable-once)
-;;   :ensure t)
 ;;
 ;; (use-package treemacs-tab-bar  ; treemacs-tab-bar if you use tab-bar-mode
 ;;   :after (treemacs)
-;;   :ensure t
 ;;   :config (treemacs-set-scope-type 'Tabs))
 ;;
 ;; (treemacs-start-on-boot)
@@ -1619,7 +1606,6 @@ To configure **helpful**, add the following to `~/.emacs.d/post-init.el`:
 ;; Helpful is an alternative to the built-in Emacs help that provides much more
 ;; contextual information.
 (use-package helpful
-  :ensure t
   :commands (helpful-callable
              helpful-variable
              helpful-key
@@ -1645,7 +1631,6 @@ It operates by generating a dynamic, temporary mapping: upon invocation, such as
 To configure **avy**, add the following to `~/.emacs.d/post-init.el`:
 ```elisp
 (use-package avy
-  :ensure t
   :commands (avy-goto-char
              avy-goto-char-2
              avy-next)
@@ -1667,7 +1652,6 @@ The functions above also ensures that any modified buffers are saved prior to ex
 To configure **bufferfile**, add the following to `~/.emacs.d/post-init.el`:
 ```elisp
 (use-package bufferfile
-  :ensure t
   :commands (bufferfile-copy
              bufferfile-rename
              bufferfile-delete)
@@ -1695,14 +1679,12 @@ To enhance the Elisp development experience, add the following to `~/.emacs.d/po
 ```emacs-lisp
 ;; Enables automatic indentation of code while typing
 (use-package aggressive-indent
-  :ensure t
   :commands aggressive-indent-mode
   :hook
   (emacs-lisp-mode . aggressive-indent-mode))
 
 ;; Highlights function and variable definitions in Emacs Lisp mode
 (use-package highlight-defined
-  :ensure t
   :commands highlight-defined-mode
   :hook
   (emacs-lisp-mode . highlight-defined-mode))
@@ -1712,7 +1694,6 @@ Other optional packages that may be useful include:
 ```emacs-lisp
 ;; Prevent parenthesis imbalance
 (use-package paredit
-  :ensure t
   :commands paredit-mode
   :hook
   (emacs-lisp-mode . paredit-mode)
@@ -1722,14 +1703,12 @@ Other optional packages that may be useful include:
 ;; For paredit+Evil mode users: enhances paredit with Evil mode compatibility
 ;; --------------------------------------------------------------------------
 ;; (use-package enhanced-evil-paredit
-;;   :ensure t
 ;;   :commands enhanced-evil-paredit-mode
 ;;   :hook
 ;;   (paredit-mode . enhanced-evil-paredit-mode))
 
 ;; Displays visible indicators for page breaks
 (use-package page-break-lines
-  :ensure t
   :commands (page-break-lines-mode
              global-page-break-lines-mode)
   :hook
@@ -1738,7 +1717,6 @@ Other optional packages that may be useful include:
 ;; Provides functions to find references to functions, macros, variables,
 ;; special forms, and symbols in Emacs Lisp
 (use-package elisp-refs
-  :ensure t
   :commands (elisp-refs-function
              elisp-refs-macro
              elisp-refs-variable
@@ -1762,7 +1740,6 @@ To configure **inhibit-mouse**, add the following to `~/.emacs.d/post-init.el`:
 ;; - Reinforce a keyboard-centric workflow by discouraging reliance on the mouse
 ;;   for navigation.
 (use-package inhibit-mouse
-  :ensure t
   :config
   (if (daemonp)
       (add-hook 'server-after-make-frame-hook #'inhibit-mouse-mode)
@@ -1790,7 +1767,6 @@ To enable *quick-sdcv*, add the following to your `~/.emacs.d/post-init.el`:
 
 ```emacs-lisp
 (use-package quick-sdcv
-  :ensure t
   :custom
   (quick-sdcv-unique-buffers t)
   (quick-sdcv-dictionary-prefix-symbol "►")
@@ -1898,6 +1874,40 @@ To configure the *vterm* package, add the following to your `~/.emacs.d/post-ini
 ```
 
 The `vterm` terminal emulator can be started with `M-x vterm`.
+
+### Emacs server
+
+The Emacs server allows external programs such as `emacsclient` to connect to a single running instance of Emacs. This makes it possible to open files in the existing session rather than starting a new Emacs process each time.
+
+To start the Emacs server after initialization, add the following form to your `~/.emacs.d/post-init.el`:
+
+```elisp
+;; The Emacs server allows external programs such as `emacsclient' to connect to
+;; a single running instance of Emacs. This makes it possible to open files in
+;; the existing session rather than starting a new Emacs process each time.
+;;
+;; Once the server is running, the `emacsclient' command can be used in the
+;; terminal to open files in the active Emacs session. For example, running the
+;; following command opens the file in the existing Emacs frame without blocking
+;; the terminal process.
+;;   emacsclient -n filename.txt
+;;
+(use-package server
+  :ensure nil
+  :if (not (daemonp))
+  :commands (server-running-p
+             server-start)
+  :hook (after-init . my-server-start)
+  :preface
+  (defun my-server-start ()
+    "Start the Emacs server if no server process is currently active."
+    (unless (server-running-p)
+      (server-start))))
+```
+
+This configuration safely checks that Emacs is not running as a daemon and ensures that no existing server process is active, preventing conflicts.
+
+Once the server is running, the `emacsclient` command can be used in the terminal to open files in the active Emacs session. For example, running `emacsclient -n filename.txt` opens the file in the existing Emacs frame without blocking the terminal process.
 
 ### Loading the custom.el file
 
@@ -2058,15 +2068,6 @@ In Emacs, customization variables modified via the UI (e.g., `M-x customize`) ar
 (setq tooltip-delay 0.4)        ; Delay before showing a tooltip after mouse hover (default: 0.7)
 (setq tooltip-short-delay 0.08) ; Delay before showing a short tooltip (Default: 0.1)
 (tooltip-mode 1)
-
-;; Configure the built-in Emacs server to start after initialization,
-;; allowing the use of the emacsclient command to open files in the
-;; current session.
-(use-package server
-  :ensure nil
-  :commands server-start
-  :hook
-  (after-init . server-start))
 ```
 
 It is also recommended to read the following articles:
@@ -2250,6 +2251,8 @@ The `straight.el` package is a declarative package manager for Emacs that aims t
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+
+(setq straight-use-package-by-default t)
 ```
 
 ### Configuring Elpaca (package manager)
@@ -2308,9 +2311,15 @@ And [add the Elpaca bootstrap code](https://github.com/progfolio/elpaca?tab=read
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
-;; Optional: Install use-package support
-;; (elpaca elpaca-use-package
-;;   (elpaca-use-package-mode))
+;; Enable 'elpaca-no-symlink-mode' on Windows, as symlink creation
+;; often fails without Administrator privileges or Developer Mode.
+(when (eq system-type 'windows-nt)
+  (elpaca-no-symlink-mode 1))
+
+;; Install use-package support
+(elpaca elpaca-use-package
+  ;; Enable use-package :ensure support for Elpaca.
+  (elpaca-use-package-mode))
 ```
 
 ## Frequently asked questions
@@ -2477,9 +2486,7 @@ Here is a comprehensive `package-pinned-packages` configuration to guarantee tha
         (vertico-prescient             . "melpa-stable")
         (visual-fill-column            . "melpa-stable")
         (yasnippet-snippets            . "melpa-stable")
-        (ace-window                    . "gnu")
         (aggressive-indent             . "gnu")
-        (avy                           . "gnu")
         (cape                          . "gnu")
         (compat                        . "gnu")
         (consult                       . "gnu")
@@ -2728,51 +2735,64 @@ To install and load packages during the early-init phase, add the following to `
 
 - [zendo: Emacs literate configuration](https://github.com/zendo/nsworld/blob/main/dotfiles/org/all-emacs.org)
 
+- [ZforCandY minimal-emacs.d configuration](https://codeberg.org/ZforCandY/priv-conf/src/branch/main/minimal-emacs.d)
+
 ## Features
 
-1. **Performance Improvements:**
-   - Increases the amount read from processes in a single chunk.
-   - Prefers loading newer compiled files.
-   - Reduces startup screen and message noise, including removing the "For information about GNU Emacs..." message.
-   - Configures Emacs to start with a scratch buffer in `fundamental-mode` to shave seconds off startup time.
-   - Delays garbage collection during startup to improve performance and resets it to a more reasonable value once Emacs has started.
-   - Customizes `file-name-handler-alist` for improved startup time and package load time (Special thanks to the Doom Emacs developers for the `file-name-handler-alist` optimizations; This function have been inspired by their project and will contribute to improving vanilla Emacs configurations.)
-   - Reduces rendering workload by not rendering cursors or regions in non-focused windows.
-   - Disables warnings from the legacy advice API and suppresses warnings about aliased variables.
-   - Avoids unnecessary excessive UI updates.
-   - Disables font compacting to avoid high memory usage.
-   - Defer tool bar setup
-   - Unset command line options irrelevant to the current OS
+The minimal-emacs.d base provides a sensible foundation for your personal configuration. It addresses common pain points in vanilla Emacs to provide a responsive and clean environment from the start, without forcing a specific workflow.
 
-2. **Native Compilation and Byte Compilation:**
-   - Configures native compilation and byte compilation settings
-   - Suppresses compiler warnings and errors during native compilation.
+### Fast Initialization and Performance
 
-4. **UI Element Management:**
-   - Disables the startup screen and messages, including menu bar, tool bar, and scroll bars.
-   - Configures Emacs to avoid resizing frames and minimizes unnecessary UI updates.
+* **Optimized File Handlers:** Defers garbage collection during startup to reduce load times, restoring it to a standard threshold once Emacs is ready.
+* **Process Throughput:** Increases the chunk size for reading from processes to speed up external tool interactions.
+* **Compiled File Preference:** Instructs Emacs to prioritize loading newer byte-compiled files.
+* **Optimized Text Rendering:** Disables font compacting during startup to reduce memory usage and speed up initialization.
+* **Silent Boot Sequence:** Removes the GNU Emacs startup message, unsets OS-irrelevant command line options, and defers toolbar setup.
 
-5. **Package Management:**
-   - Configures package archives and priorities for MELPA, ELPA, and other repositories.
+### Native Compilation and Byte Compilation
 
-6. **Customizable Initialization Files:**
-   - Supports additional configuration files (`pre-init.el`, `post-init.el`, `pre-early-init.el`, and `post-early-init.el`) to allow further customization at different stages of the startup process.
+* **Out-of-the-Box Optimization:** Configures default settings for native and byte compilation.
+* **Quiet Compilation:** Suppresses warnings and errors during async native compilation to prevent popup interruptions.
 
-7. **File Management:**
-   - Manages auto-save and backup files, including backup options and version control settings.
+### Interface Defaults
 
-8. **User Experience Enhancements:**
-   - Configures user interface settings such as cursor behavior, scrolling, and response to prompts.
-   - Disables beeping and blinking to avoid distractions.
+* **Minimal UI:** Disables the startup screen, menu bar, tool bar, and scroll bars by default to maximize screen space.
+* **Smart Rendering:** Stops rendering cursors and region highlights in non-focused windows. Prevents Emacs from automatically resizing frames on setting adjustments.
+* **Typographic Defaults:** Renders underlines at the descent line, replaces truncation markers with an ellipsis ("..."), and disables the visible bell.
+* **Focused Minibuffer:** Enables recursive minibuffers and restricts the cursor from entering read-only prompt areas.
 
-9. **Buffer and Window Configuration:**
-   - Sets default fringe widths and buffer boundaries.
-   - Configures smooth scrolling and cursor behavior for a more seamless editing experience.
+### Package and File Management
 
-10. **Miscellaneous**
-    - Verifies that the Emacs configuration has loaded successfully and issues a warning if there are any issues.
-    - Configure and optimize settings for Eglot, recentf, savehist, auto-save, and others without enabling the modes themselves. This modifies the behavior and preferences to improve performance and usability.
-    - Configure Ediff to use a single frame and split windows horizontally
+* **Repository Prioritization:** Configures archives and sets explicit priorities for GNU ELPA, NonGNU ELPA, and MELPA.
+* **Centralized Artifacts:** Routes auto-save and backup files to dedicated subdirectories within the Emacs configuration folder. Enables versioned backups.
+* **Auto-Revert:** Refreshes buffers when the underlying file changes on disk. (Disabled by default.)
+* **Session Memory:** Saves cursor positions across sessions, maintains recent file history, and persists the minibuffer history. (Disabled by default.)
+
+### Precision Editing and UX Enhancements
+
+* **Predictable Scrolling:** Configures conservative scrolling to eliminate default half-screen jumps.
+* **Modern Formatting Standards:** Enforces a POSIX-compliant final newline on save, disables double-space sentence endings, and triggers smart indentation only on newlines and backspaces.
+* **Sensible Tab Management:** Defaults to spaces with a tab width. Configures the tab key to indent first, then complete.
+* **Fast Interactions:** Configures prompts to accept "y" or "n" instead of "yes" or "no".
+
+### Developer Experience
+
+* **Optional Built-in Package Defaults:** Configures optimized settings for built-in packages like Eglot, recentf, savehist, and auto-save without enabling them by default.
+* **Git Integration:** Sets version control to use the `--histogram` diff algorithm and automatically follow file renames in logs.
+
+### Buffer, Directory, and Window Management
+
+* **Modern Splits:** Favors vertical window splits over horizontal ones.
+* **Ediff Optimization:** Configures Ediff to use a single frame and split windows horizontally.
+* **Dired Mastery:** Enables `dired-dwim-target` for easier file operations between panes. Auto-updates Dired buffers and cleans up deleted directories silently.
+* **Window Dividers:** Uses minimalistic window dividers and sets default fringe widths.
+
+### Security, Stability, and Customizable Initialization
+
+* **Safety Checks:** Verifies successful configuration load and warns of conflicts with legacy `~/.emacs` files.
+* **Drop-In Customization:** Supports loading modular configuration files (`pre-early-init.el`, `post-early-init.el`, `pre-init.el`, and `post-init.el`) to hook into different stages of the startup process.
+* **Strict TLS Verification:** Enforces strict SSL/TLS certificate checks and raises the minimum encryption strength for GnuTLS.
+* **Encrypted Auth Sources:** Prefers GPG-encrypted authentication files (`~/.authinfo.gpg`) and directs the GPG agent to use the minibuffer for passphrase entry.
 
 ## Author and license
 
