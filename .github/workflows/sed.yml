@@ -1,3 +1,4 @@
+# Makes init.el and early-init.el idempotent to change
 name: Remove lines
 on:
   push:
@@ -24,9 +25,9 @@ jobs:
           # Define a shell variable for clarity
           SERVICE_VERSION=$(git rev-parse --short HEAD)
 
-          # Download latest working version
-          curl --output early-init.el "https://raw.githubusercontent.com/jamescherti/minimal-emacs.d/refs/heads/main/early-init.el"
-          curl --output init.el "https://raw.githubusercontent.com/jamescherti/minimal-emacs.d/refs/heads/main/init.el"
+          # Download stable version 1.42
+          curl --output early-init.el "https://raw.githubusercontent.com/jamescherti/minimal-emacs.d/0d07164f86e396884d7b3562abb94ce1b93d2f8f/early-init.el"
+          curl --output init.el "https://raw.githubusercontent.com/jamescherti/minimal-emacs.d/0d07164f86e396884d7b3562abb94ce1b93d2f8f/init.el"
           
           # Use sed to replace the placeholder
           # -i flag for inline editing
@@ -36,15 +37,15 @@ jobs:
           
           # 2,21d: initial comment block after lexical-binding to ';;; Code:'
           # 98,109d: disable vars that check for other user files
-          # 128d: disable check for home directory emacs configs
-          # 158,159d: minimal-emacs-load-user-init invoked
-          # 471,472d: minimal-emacs-load-user-init invoked
-          sed -i "1,21d;98,109d;128d;158,159d;471,472d" early-init.el
+          # 129,130d: disable check for home directory emacs configs
+          # 160,161d: minimal-emacs-load-user-init invoked
+          # 485,486d: minimal-emacs-load-user-init invoked
+          sed -i "1,21d;98,109d;129,130d;160,161d;485,486d" early-init.el
           
           # 1,22d: Initial comment block including lexical binding up to ';;; Code:'
           # 26,29d: minimal-emacs-load-user-init invoked
-          # 568,571d: minimal-emacs-load-user-init invoked
-          sed -i "1,22d;26,29d;568,571d" init.el
+          # 566,568d: minimal-emacs-load-user-init invoked
+          sed -i "1,22d;26,29d;566,568d" init.el
          
       - name: Add, commit, and push
         # You may pin to the exact commit or the version.
