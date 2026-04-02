@@ -615,7 +615,6 @@ If the new path's directories does not exist, create them."
      '("j" . meow-next)
      '("k" . meow-prev)
      '("~" . meow-keypad)
-     '("TAB" . kirigami-toggle-fold)
      '("S-TAB" . kirigami-toggle-fold)
      '("<escape>" . keyboard-quit))
     (meow-leader-define-key
@@ -633,7 +632,7 @@ If the new path's directories does not exist, create them."
      '("/" . meow-keypad-describe-key)
      '("?" . meow-cheatsheet))
     (meow-normal-define-key
-     '("SPC" . kirigami-toggle-fold)
+     '("S-TAB" . kirigami-toggle-fold)
      '("~" . meow-keypad)
      '("0" . meow-expand-0)
      '("9" . meow-expand-9)
@@ -700,7 +699,7 @@ If the new path's directories does not exist, create them."
      '("u" . undo-fu-only-undo)
      '("U" . undo-fu-only-redo)
      '("s" . meow-visit)
-     '("d" . my-delete-cmd)
+     '("d" . easy-kill)
      '("M-;" . meow-reverse)
      '("g" . meow-grab)
      '("o" . meow-open-below)
@@ -709,7 +708,7 @@ If the new path's directories does not exist, create them."
      '("A" . meow-to-block)
      '("/" . consult-line)
      '("?" . consult-ripgrep)
-     '("TAB" . kirigami-toggle-fold)
+     ; '("TAB" . )
      '("v" . set-mark-command)
      '("<escape>" . keyboard-quit)
      '("SPC" . embark-act)
@@ -732,6 +731,8 @@ If the new path's directories does not exist, create them."
                                               '("C" . meow-change))))))
     (meow-setup)
     (meow-global-mode ))
+
+(use-package easy-kill :ensure t)
 
 ;; Enable horizontal scrolling
 (setopt mouse-wheel-tilt-scroll t)
@@ -916,7 +917,7 @@ If the new path's directories does not exist, create them."
     (org-startup-truncated t)
     :bind
     (:map org-mode-map
-          ("#" . org-comment-dwim)   ;; pick some comfortable binding
+     ("S-/" . org-comment-dwim)   ;; pick some comfortable binding
      ))
 
 
