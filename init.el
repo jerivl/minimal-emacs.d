@@ -537,8 +537,9 @@
 
 ;;; Load post init
 
-(when (and minimal-emacs-load-post-init
-           (fboundp 'minimal-emacs-load-user-init))
+
+(setq minimal-emacs--success t)
+
 ;; Local variables:
 ;; byte-compile-warnings: (not obsolete free-vars)
 ;; End:
