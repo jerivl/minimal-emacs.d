@@ -92,8 +92,7 @@ Note that this should end with a directory separator.")
 
      (t
       (error "Configuration error. Debug by starting Emacs with: --debug-init")))))
-(unless noninteractive
-  (add-hook 'emacs-startup-hook #'minimal-emacs--check-success 102))
+
 
 (defvar minimal-emacs-load-compiled-init-files nil
   "If non-nil, attempt to load byte-compiled .elc for init files.
@@ -121,8 +120,8 @@ pre-early-init.el, and post-early-init.el.")
       ;; Remove the file suffix (.el, .el.gz, etc.) to let the `load' function
       ;; select between .el and .elc files.
       (setq init-file (minimal-emacs--remove-el-file-suffix init-file))
-(when minimal-emacs-load-pre-early-init
-  (minimal-emacs-load-user-init "pre-early-init.el"))
+      (load init-file :no-error (not minimal-emacs-debug)))))
+
 
 (setq custom-theme-directory
       (expand-file-name "themes/" minimal-emacs-user-directory))
@@ -432,6 +431,8 @@ this stage of initialization."
 (setq use-package-enable-imenu-support t)
 
 ;; package.el
+(setq package-enable-at-startup nil)  ; Let the init.el file handle this
+(setq package-quickstart-file
       (expand-file-name "package-quickstart.el" user-emacs-directory))
 (setq package-archives '(("melpa"        . "https://melpa.org/packages/")
                          ("gnu"          . "https://elpa.gnu.org/packages/")
@@ -444,8 +445,6 @@ this stage of initialization."
 
 ;;; Load post-early-init.el
 
-(when minimal-emacs-load-post-early-init
-  (minimal-emacs-load-user-init "post-early-init.el"))
 
 ;; Local variables:
 ;; byte-compile-warnings: (not obsolete free-vars)
