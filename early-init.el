@@ -1,24 +1,3 @@
-;;; early-init.el --- Early Init -*- lexical-binding: t; -*-
-
-;; Author: James Cherti <https://www.jamescherti.com/contact/>
-;; URL: https://github.com/jamescherti/minimal-emacs.d
-;; Package-Requires: ((emacs "29.1"))
-;; Keywords: maint
-;; Version: 1.4.2
-;; SPDX-License-Identifier: GPL-3.0-or-later
-
-;;; Commentary:
-;; The minimal-emacs.d project is a lightweight and optimized Emacs base
-;; (init.el and early-init.el) that gives you full control over your
-;; configuration. It provides better defaults, an optimized startup, and a clean
-;; foundation for building your own vanilla Emacs setup.
-;;
-;; Building the minimal-emacs.d init.el and early-init.el was the result of
-;; extensive research and testing to fine-tune the best parameters and
-;; optimizations for an Emacs configuration.
-;;
-;; Do not modify this file; instead, modify pre-early-init.el or
-;; post-early-init.el.
 
 ;;; Code:
 
@@ -95,18 +74,6 @@ of the progress or any relevant activities during startup.")
   "Directory beneath minimal-emacs.d files are placed.
 Note that this should end with a directory separator.")
 
-(defvar minimal-emacs-load-pre-early-init t
-  "If non-nil, attempt to load `pre-early-init.el`.")
-
-(defvar minimal-emacs-load-post-early-init t
-  "If non-nil, attempt to load `post-early-init.el`.")
-
-(defvar minimal-emacs-load-pre-init t
-  "If non-nil, attempt to load `pre-init.el`.")
-
-(defvar minimal-emacs-load-post-init t
-  "If non-nil, attempt to load `post-init.el`.")
-
 ;;; Load pre-early-init.el
 
 ;; Prefer loading newer compiled files
@@ -125,7 +92,6 @@ Note that this should end with a directory separator.")
 
      (t
       (error "Configuration error. Debug by starting Emacs with: --debug-init")))))
-
 (unless noninteractive
   (add-hook 'emacs-startup-hook #'minimal-emacs--check-success 102))
 
@@ -155,8 +121,6 @@ pre-early-init.el, and post-early-init.el.")
       ;; Remove the file suffix (.el, .el.gz, etc.) to let the `load' function
       ;; select between .el and .elc files.
       (setq init-file (minimal-emacs--remove-el-file-suffix init-file))
-      (load init-file :no-error (not minimal-emacs-debug)))))
-
 (when minimal-emacs-load-pre-early-init
   (minimal-emacs-load-user-init "pre-early-init.el"))
 
@@ -468,8 +432,6 @@ this stage of initialization."
 (setq use-package-enable-imenu-support t)
 
 ;; package.el
-(setq package-enable-at-startup nil)  ; Let the init.el file handle this
-(setq package-quickstart-file
       (expand-file-name "package-quickstart.el" user-emacs-directory))
 (setq package-archives '(("melpa"        . "https://melpa.org/packages/")
                          ("gnu"          . "https://elpa.gnu.org/packages/")

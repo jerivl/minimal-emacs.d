@@ -14,18 +14,19 @@
 # along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-name: CI
+name: Tangle, commit and push
 on:
+  workflow_dispatch:
   push:
     branches:
       - update
     paths:
-      - '**.el'
+      - 'config.org'
   pull_request:
     paths:
-      - '**.el'
+      - 'config.org'
 jobs:
-  test:
+  tangle:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -35,14 +36,20 @@ jobs:
           - 3.12
     steps:
       # Cask
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # The token is required to push changes back to the repository
+          token: ${{ secrets.CI }} 
+
       - uses: purcell/setup-emacs@master
         with:
           version: ${{ matrix.emacs-version }}
 
-      - name: Compile and check eval
+      - name: Compile
         run: |
-          echo '(setq user-emacs-directory "${GITHUB_WORKSPACE}")' | tee dir
-          cat lexical-binding dir pre-early-init.el early-init.el init.el post-init.el | tee tmp
-          emacs -batch -L . --eval '(progn (insert "Hello, World!") (write-file "output.txt"))' -f batch-byte-compile tmp
-          cat output.txt
+          emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "config.org")'
+      
+      - name: Add, commit, and push
+        uses: actions4git/add-commit-push@v1.0.0
+    

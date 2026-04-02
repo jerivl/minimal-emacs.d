@@ -1,0 +1,14 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY ; 
+_commit: 12f1425
+_src_path: copier-templates
+application:
+- writing
+- diagrams
+commit_helpers: cocogitto+koji+aicommit2
+dbs: []
+emacs: 'True'
+languages:
+- elisp TODO
+literate: 'False'
+project_name: minimal-emacs.d
+vcs: jj

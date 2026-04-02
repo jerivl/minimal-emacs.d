@@ -23,10 +23,6 @@
 
 ;;; Load pre-init.el
 
-(if (fboundp 'minimal-emacs-load-user-init)
-    (when minimal-emacs-load-pre-init
-      (minimal-emacs-load-user-init "pre-init.el"))
-  (error "The early-init.el file failed to load"))
 
 ;;; Before package
 
@@ -565,10 +561,6 @@
 
 (when (and minimal-emacs-load-post-init
            (fboundp 'minimal-emacs-load-user-init))
-  (minimal-emacs-load-user-init "post-init.el"))
-
-(setq minimal-emacs--success t)
-
 ;; Local variables:
 ;; byte-compile-warnings: (not obsolete free-vars)
 ;; End:
