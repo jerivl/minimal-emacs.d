@@ -2,10 +2,16 @@
 name: Remove lines
 on:
   push:
+    branches:
+      - main
+      - update
     paths:
       - 'pre-init.el'
       - 'init.el'
   pull_request:
+    branches:
+      - main
+      - update
     paths:
       - 'pre-init.el'
       - 'init.el'
