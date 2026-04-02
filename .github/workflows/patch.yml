@@ -1,4 +1,4 @@
-# Makes init.el and early-init.el idempotent to change
+# Idempotentency for relevant files in main
 name: Remove lines
 on:
   push:
@@ -8,6 +8,7 @@ on:
     paths:
       - 'pre-init.el'
       - 'init.el'
+      - '.gitignore'
   pull_request:
     branches:
       - main
@@ -15,6 +16,7 @@ on:
     paths:
       - 'pre-init.el'
       - 'init.el'
+      - '.gitignore'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -52,6 +54,9 @@ jobs:
           # 26,29d: minimal-emacs-load-user-init invoked
           # 566,568d: minimal-emacs-load-user-init invoked
           sed -i "1,22d;26,29d;566,568d" init.el
+
+          # Make gitignore idempotent
+          echo -e "# Source - https://stackoverflow.com/a/987162\n\n# Posted by Joakim Elofsson, modified by community. See post 'Timeline' for change history\n\n# Retrieved 2026-03-09, License - CC BY-SA 3.0\n\n# Ignore everything\n*\n\n# Lock files\ndevenv.lock\n\n# Even the hidden things\n.devenv/*\n.direnv/*\n\n# Lock files\ndevenv.lock\n\n# But not these files...\n\!.gitignore\n\!config.org\n# etc...\n\n# ...even if they are in subdirectories\n\!*/\n" | tee .gitignore 
          
       - name: Add, commit, and push
         # You may pin to the exact commit or the version.
