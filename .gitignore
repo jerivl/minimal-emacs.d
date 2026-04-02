@@ -18,10 +18,10 @@ devenv.lock
 devenv.lock
 
 # But not these files...
-!.gitignore
-!config.org
+\!.gitignore
+\!config.org
 # etc...
 
 # ...even if they are in subdirectories
-!*/
+\!*/
 
