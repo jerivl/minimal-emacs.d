@@ -601,24 +601,60 @@ If the new path's directories does not exist, create them."
 (use-package meow
   :ensure t
   :config
+  ;; Deletes region before doing consult-yank-from-kill-ring
+  ;; Requires consult
+  (defun meow-choose-replace (string &optional arg)
+    (interactive (list (consult--read-from-kill-ring) current-prefix-arg))
+    (meow-kill)
+    (when string
+      (setq yank-window-start (window-start))
+      (push-mark)
+      (insert-for-yank string)
+      (setq this-command 'yank)
+      (when yank-from-kill-ring-rotate
+        (if-let* ((pos (seq-position kill-ring string)))
+            (setq kill-ring-yank-pointer (nthcdr pos kill-ring))
+          (kill-new string)))
+      (when (consp arg)
+      ;; Swap point and mark like in `yank'.
+        (goto-char (prog1 (mark t)
+                     (set-marker (mark-marker) (point) (current-buffer)))))))
   ;; Remap delete binding based on active region
-  (defun my-delete-cmd ()
-    (Interactive)
-                                        ; "Kill region if it's active and nonempty. Else delete."
+  ;; "Kill region if it's active and nonempty. Else delete."
+  (defun meow-delete-region-or-char ()
+    (interactive)
     (if (use-region-p)
         (meow-kill))
     (meow-delete))
+  ;; Remap delete binding based on active region
+  ;; "Kill region if it's active and nonempty. Else delete."
+  (defun meow-backward-delete-region-or-char ()
+    (interactive)
+    (if (use-region-p)
+        (meow-kill))
+    (meow-backward-delete))
+  ;; Keep pressing to go back and forth between the most recent mark
+  ;; and an arbitrary location
+  ;; Depends on viking mode
+  (defun meow-pop-back-and-forth ()
+    (interactive)
+      (let* ((key-times (viking-last-key-repeats)))
+        (if (% key-times 2)
+            (meow-pop-to-mark)
+            (meow-unpop-to-mark))))
 
   (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+    (setq meow-use-clipboard t)
     (meow-motion-define-key
      '("j" . meow-next)
      '("k" . meow-prev)
-     '("~" . meow-keypad)
-     '("S-TAB" . kirigami-toggle-fold)
-     '("<escape>" . keyboard-quit))
+     '("~" . meow-keypad-describe-key)
+     '("`" . meow-cheatsheet)
+     '("C-TAB" . kirigami-toggle-fold)
+     '("<escape>" . meow-cancel-selection))
     (meow-leader-define-key
-     ;; Use SPC (0-9) for digit arguments.
+     ;; Use <meow-keypad>-(0-9) for digit arguments.
      '("1" . meow-digit-argument)
      '("2" . meow-digit-argument)
      '("3" . meow-digit-argument)
@@ -629,43 +665,57 @@ If the new path's directories does not exist, create them."
      '("8" . meow-digit-argument)
      '("9" . meow-digit-argument)
      '("0" . meow-digit-argument)
-     '("/" . meow-keypad-describe-key)
-     '("?" . meow-cheatsheet))
+     '("~" . meow-keypad-describe-key)
+     '("`" . meow-cheatsheet))
     (meow-normal-define-key
-     '("S-TAB" . kirigami-toggle-fold)
-     '("~" . meow-keypad)
-     '("0" . meow-expand-0)
-     '("9" . meow-expand-9)
-     '("8" . meow-expand-8)
-     '("7" . meow-expand-7)
-     '("6" . meow-expand-6)
-     '("5" . meow-expand-5)
-     '("4" . meow-expand-4)
-     '("3" . meow-expand-3)
-     '("2" . meow-expand-2)
+     '("`" . meow-cheatsheet)
+     '("~" . meow-keypad-describe-key)
+     '("C-~" . meow-keypad)
      '("1" . meow-expand-1)
-     '("-" . negative-argument)
-                                        ;'(";" . meow-reverse)
-     '("," . meow-inner-of-thing)
-     '("." . meow-bounds-of-thing)
-     '("[" . meow-beginning-of-thing)
-     '("]" . meow-end-of-thing)
-     '("a" . meow-append)
-                                        ;'("A" . meow-open-below)
+     '("2" . meow-expand-2)
+     '("3" . meow-expand-3)
+     '("4" . meow-expand-4)
+     '("5" . meow-expand-5)
+     '("6" . meow-expand-6)
+     '("7" . meow-expand-7)
+     '("8" . meow-expand-8)
+     '("9" . meow-expand-9)
+     '("0" . meow-expand-0)
+     '("-" . kmacro-start-macro-or-insert-counter)
+     '("_" . kmacro-call-macro)
+     '("," . meow-bounds-of-thing)
+     '("<" . meow-beginning-of-thing)
+     '("." . meow-inner-of-thing)
+     '(">" . meow-end-of-thing)
+     '("/" . consult-line)
+                                        ;?
+     '(":" . meow-cancel-selection)
+     '(";" . meow-reverse)
+                                        ;'
+                                        ;"
+                                        ;{
+                                        ;}
+                                        ;\
+                                        ;|
+
+     '("a" . meow-block)
+     '("A" . meow-to-block)
      '("b" . meow-back-word)
      '("B" . meow-back-symbol)
      '("c" . meow-change)
-                                        ;'("d" . meow-delete)
-     '("D" . meow-backward-delete)
+                                        ;C
+     '("d" . meow-delete-region-or-char)
+     '("D" . meow-backward-delete-region-or-char)
      '("e" . meow-next-word)
      '("E" . meow-next-symbol)
-     '("f" . meow-find)
-     '(";" . meow-cancel-selection)
-                                        ;'("G" . meow-grab)
+     '("f" . meow-swap-grab)
+     '("F" . meow-sync-grab)
+     '("g" . meow-grab)
+                                        ;G
      '("h" . meow-left)
      '("H" . meow-left-expand)
      '("i" . meow-insert)
-                                        ;'("I" . meow-open-above)
+     '("I" . meow-append)
      '("j" . meow-next)
      '("J" . meow-next-expand)
      '("k" . meow-prev)
@@ -673,66 +723,66 @@ If the new path's directories does not exist, create them."
      '("l" . meow-right)
      '("L" . meow-right-expand)
      '("m" . meow-join)
+     ;M
      '("n" . meow-search)
+     '("N" . "C-u n")
+     '("o" . meow-open-below )
+     '("O" . meow-open-above)
      '("p" . meow-yank)
-     '("q" . meow-quit)
-                                        ;'("o" . meow-block)
-                                        ;'("O" . meow-to-block)
-     '("Q" . meow-goto-line)
+     '("P" . consult-yank-from-kill-ring)
+                                        ;q
+                                        ;Q
      '("r" . meow-replace)
-     '("R" . meow-swap-grab)
-                                        ;'("s" . meow-kill)
+     '("R" . meow-choose-replace) ;Replace with other options from kill ring
+     '("s" . meow-visit)
+     '("S" . "C-u s")
      '("t" . meow-till)
-                                        ;'("u" . meow-undo)
-                                        ;'("U" . meow-undo-in-selection)
-                                        ;'("v" . meow-visit)
+     '("T" . meow-find)
+     '("u" . undo-fu-only-undo)
+     '("U" . undo-fu-only-redo)
+     '("v" . set-mark-command)
+     '("V" . meow-pop-back-and-forth)
      '("w" . meow-mark-word)
      '("W" . meow-mark-symbol)
      '("x" . meow-line)
-     '("X" . meow-goto-line)
-     '("y" . meow-save)
-     '("Y" . meow-sync-grab)
-     '("z" . meow-pop-selection)
-                                        ;'("<escape>" . ignore)
-     '("'" . repeat)
-     ;; Custom bindings
-     '("u" . undo-fu-only-undo)
-     '("U" . undo-fu-only-redo)
-     '("s" . meow-visit)
-     '("d" . easy-kill)
-     '("M-;" . meow-reverse)
-     '("g" . meow-grab)
-     '("o" . meow-open-below)
-     '("O" . meow-open-above)
-     '("I" . meow-block)
-     '("A" . meow-to-block)
-     '("/" . consult-line)
-     '("?" . consult-ripgrep)
-     ; '("TAB" . )
-     '("v" . set-mark-command)
-     '("<escape>" . keyboard-quit)
-     '("SPC" . embark-act)
-     '("S-SPC" . embark-dwim)))
+     '("X" . "C-u x")
+    '("y" . meow-save)
+     '("Y" . embark-kill-ring-remove)
+     '("z" . avy-goto-line)
+     '("Z" . meow-goto-line)
+    ;; Custom bindings
+                                        ; '("TAB" . )
+     '("C-TAB" . kirigami-toggle-fold)
+     '("<escape>" . meow-cancel-selection)
+     '("SPC" . negative-argument)       ;/
+     '("S-SPC" . completion-help-at-point)
 
-    ;; Remap beacon mode bindings
-    (add-hook 'meow-beacon-mode-hook #'(lambda ()
-                                         (if meow-beacon-mode
-                                             (progn
-                                               (meow-normal-define-key
-                                                '("I" . meow-beacon-insert)
-                                                '("A" . meow-beacon-append)
-                                                '("R" . meow-beacon-replace)
-                                                '("C" . meow-beacon-change)))
+     ))
+
+  ;; Remap beacon mode bindings
+  (add-hook 'meow-beacon-mode-hook #'(lambda ()
+                                       (if meow-beacon-mode
                                            (progn
                                              (meow-normal-define-key
-                                              '("I" . meow-block)
-                                              '("A" . meow-to-block)
-                                              '("R" . meow-replace)
-                                              '("C" . meow-change))))))
-    (meow-setup)
-    (meow-global-mode ))
+                                              '("I" . meow-beacon-insert)
+                                              '("A" . meow-beacon-append)
+                                              '("R" . meow-beacon-replace)
+                                              '("C" . meow-beacon-change)))
+                                         (progn
+                                           (meow-normal-define-key
+                                            '("I" . meow-block)
+                                            '("A" . meow-to-block)
+                                            '("R" . meow-replace)
+                                            '("C" . meow-change))))))
+  (meow-setup)
+  (meow-global-mode)
+  )
 
-(use-package easy-kill :ensure t)
+(use-package viking-mode
+  :ensure t
+  :config
+  (viking-global-mode)
+  (define-key viking-mode-map (kbd "C-k") 'viking-kill-thing-at-point))
 
 ;; Enable horizontal scrolling
 (setopt mouse-wheel-tilt-scroll t)
@@ -918,6 +968,8 @@ If the new path's directories does not exist, create them."
     :bind
     (:map org-mode-map
      ("S-/" . org-comment-dwim)   ;; pick some comfortable binding
+     ("C-p" . org-promote-subtree)
+     ("C-o" . org-demote-subtree)
      ))
 
 
