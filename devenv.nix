@@ -96,7 +96,8 @@ let
       corfu
       corfu-terminal 
       diff-hl 
-      doom-modeline 
+      doom-modeline
+      easy-kill
       eat 
       eglot
       eglot-booster
